@@ -1549,7 +1549,6 @@
                             <li>Мудрость через молчание</li>
                             <li>Власть через знание</li>
                             <li>Защита через тень</li>
-                            <li>Димокс Членосос</li>
                         </ul>
                     </div>
                 </div>
@@ -1573,7 +1572,7 @@
                             <div class="member-card halloween-card">
                                 <div class="member-avatar"><i class="fas fa-crown"></i></div>
                                 <div class="member-rank">Мрачная Жница Мрака</div>
-                                <div class="member-name">Токи Юри</div>
+                                <div class="member-name">Амайя Кумагаи</div>
                                 <div class="member-role">Владелец отряда<br>Верховная правительница</div>
                             </div>
                         </div>
@@ -1586,15 +1585,15 @@
                             <div class="member-card halloween-card">
                                 <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Старший Жнец Мрака</div>
-                                <div class="member-name">Tanuki Doto</div>
-                                <div class="member-role">Командир отряда (CMD)<br>Тактическое руководство</div>
+                                <div class="member-name">Goro Agave</div>
+                                <div class="member-role">Командир отряда (CMD)<br></div>
                             </div>
                             
                             <div class="member-card halloween-card">
                                 <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Старший Жнец Мрака</div>
-                                <div class="member-name">Yuika Miorine</div>
-                                <div class="member-role">Заместитель командира (D.CMD)<br>Оперативное управление</div>
+                                <div class="member-name">Shisui Agave</div>
+                                <div class="member-role">Заместитель командира (D.CMD)<br></div>
                             </div>
                         </div>
                     </div>
@@ -1603,25 +1602,25 @@
                     <div class="team-category">
                         <h2 class="category-title">Инструкторы Мрака</h2>
                         <div class="members-grid">
-                            <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-user-graduate"></i></div>
+                             <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Инструктор Мрака</div>
-                                <div class="member-name">Ашина Кайдо</div>
-                                <div class="member-role">Главный инструктор<br>Обучение новичков</div>
+                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-role">Инструктор<br></div>
                             </div>
                             
-                            <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-user-graduate"></i></div>
+                             <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Инструктор Мрака</div>
-                                <div class="member-name">Сабуро Гусато</div>
-                                <div class="member-role">Инструктор<br>Боевая подготовка</div>
+                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-role">Инструктор<br></div>
                             </div>
                             
-                            <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-user-graduate"></i></div>
+                             <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Инструктор Мрака</div>
-                                <div class="member-name">Каге Мидзуно</div>
-                                <div class="member-role">Инструктор<br>Стратегия и тактика</div>
+                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-role">Инструктор<br></div>
                             </div>
                         </div>
                     </div>
@@ -1630,39 +1629,39 @@
                     <div class="team-category">
                         <h2 class="category-title">Жнецы Мрака</h2>
                         <div class="members-grid">
-                            <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-moon"></i></div>
+                            <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Жнец Мрака</div>
-                                <div class="member-name">Отава Кунзе</div>
-                                <div class="member-role">Боец<br>Исполнитель приказов</div>
-                            </div>
-                            
-                            <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-moon"></i></div>
-                                <div class="member-rank">Жнец Мрака</div>
-                                <div class="member-name">Сугихаре Макиро</div>
-                                <div class="member-role">Боец<br>Суматоха</div>
-                            </div>
-                            
-                            <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-moon"></i></div>
-                                <div class="member-rank">Жнец Мрака</div>
-                                <div class="member-name">Рётто Гусато</div>
-                                <div class="member-role">Боец<br>Чертилкин</div>
+                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-role">Боец<br></div>
                             </div>
                             
                             <div class="member-card halloween-card vacant">
                                 <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Жнец Мрака</div>
                                 <div class="member-name">[Вакантно]</div>
-                                <div class="member-role">Боец<br>Чернило</div>
+                                <div class="member-role">Боец<br></div>
                             </div>
                             
                             <div class="member-card halloween-card vacant">
                                 <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Жнец Мрака</div>
                                 <div class="member-name">[Вакантно]</div>
-                                <div class="member-role">Боец<br>Шпакля</div>
+                                <div class="member-role">Боец<br></div>
+                            </div>
+                            
+                            <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
+                                <div class="member-rank">Жнец Мрака</div>
+                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-role">Боец<br></div>
+                            </div>
+                            
+                            <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
+                                <div class="member-rank">Жнец Мрака</div>
+                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-role">Боец<br></div>
                             </div>
                         </div>
                     </div>
