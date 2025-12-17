@@ -20,7 +20,7 @@
             --blood-red: #4b0082;
             --dark-purple: #191970;
             --deep-blue: #000080;
-            --halloween-orange: #ff7518;
+            --halloween-orange: #18ff8c;
             --halloween-purple: #8a2be2;
             --pumpkin: #ff8c00;
         }
@@ -1688,15 +1688,15 @@
         <div class="container">
             <!-- Главная страница -->
             <div id="main" class="section active">
-                <!-- ХЭЛЛОУИНСКИЙ БАННЕР -->
+                <!-- новогодний БАННЕР -->
                 <div class="halloween-banner">
-                    <h2>🎄 Хэллоуин в Отряде Мрак Иль 🎄</h2>
-                    <p>Тайны тьмы оживают в эту ночь ужасов и мистики!</p>
+                    <h2>🎄 Новогодний Вайб в отряде Мрак 🎄</h2>
+                    <p>Счастливого нового года, всего вам мрачного</p>
                 </div>
                 
                 <section class="hero">
                     <h1>ОТРЯД МРАК</h1>
-                    <p>Тайное братство, где тьма становится силой, а молчание - оружием. Мы - тени, что охраняют равновесие между светом и тьмой.</p>
+                    <p>Тайное братство, где тьма становится силой, а молчание - оружием.</p>
                     
                     <div class="server-info" id="server-ip" onclick="copyServerIP()">
                         <i class="fas fa-server"></i>
