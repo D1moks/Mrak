@@ -1466,7 +1466,7 @@
                             <i class="fas fa-chart-line"></i>
                         </div>
                         <h3>Система Повышения</h3>
-                        <p>Путь от Демона к Цукумону через накопление материи. Узнай как повысить свой ранг в братстве.</p>
+                        <p>Путь от Демона к Цукумону через накопление Кровавых Монет. Узнай как повысить свой ранг в братстве.</p>
                         <div class="feature-button halloween-button" onclick="showSection('progression')">
                             Узнать о повышении
                         </div>
@@ -1673,55 +1673,55 @@
                 <div class="page-header">
                     <h1>СИСТЕМА ПОВЫШЕНИЯ</h1>
                     <p style="color: var(--light); max-width: 600px; margin: 0 auto; font-size: 1.2em;">
-                        Путь от Демона к Цукумону через накопление материи
+                        Путь от Демона к Цукумону через накопление Кровавых Монет 
                     </p>
                 </div>
 
                 <div class="features-grid">
-                    <!-- Система получения материи -->
+                    <!-- Система получения Кровавых Монет -->
                     <div class="feature-card halloween-card">
                         <div class="feature-icon">
                             <i class="fas fa-coins"></i>
                         </div>
-                        <h3>Получение Материи</h3>
+                        <h3>Получение Кровавых Монет</h3>
                         <div class="matter-system">
                             <div class="matter-category">
                                 <h4>Боевые действия</h4>
                                 <ul>
-                                    <li>Убийство 1 истребителя ➤ <span class="matter-amount">1 материя</span></li>
-                                    <li>Убийство 1 столпа ➤ <span class="matter-amount">2 материи</span></li>
-                                    <li>Захват важной точки ➤ <span class="matter-amount">5 материй</span></li>
-                                    <li>Захват 2 точек ➤ <span class="matter-amount">2 материи</span></li>
-                                    <li>Участие в ГРП ➤ <span class="matter-amount">5 материй</span></li>
+                                    <li>Убийство 1 истребителя ➤ <span class="matter-amount">1 Кровавая Монета</span></li>
+                                    <li>Убийство 1 столпа ➤ <span class="matter-amount">2 Кровавые Монеты</span></li>
+                                    <li>Захват важной точки ➤ <span class="matter-amount">5 Кровавых Монет</span></li>
+                                    <li>Захват 2 точек ➤ <span class="matter-amount">2 Кровавые Монеты</span></li>
+                                    <li>Участие в ГРП ➤ <span class="matter-amount">5 Кровавых Монет</span></li>
                                 </ul>
                             </div>
                             
                             <div class="matter-category">
                                 <h4>Задания</h4>
                                 <ul>
-                                    <li>Инструктора Мрака ➤ <span class="matter-amount">2-5 материй</span></li>
-                                    <li>Старшего Жнеца ➤ <span class="matter-amount">5-7 материй</span></li>
-                                    <li>Мрачной Жницы ➤ <span class="matter-amount">10 материй</span></li>
-                                    <li>Низшей луны ➤ <span class="matter-amount">5 материй</span></li>
-                                    <li>Высшей луны ➤ <span class="matter-amount">7 материй</span></li>
+                                    <li>Инструктора Мрака ➤ <span class="matter-amount">2-5 Кровавые Монеты</span></li>
+                                    <li>Старшего Жнеца ➤ <span class="matter-amount">5-7 Кровавых Монет</span></li>
+                                    <li>Мрачной Жницы ➤ <span class="matter-amount">10 Кровавых Монет</span></li>
+                                    <li>Низшей луны ➤ <span class="matter-amount">5 Кровавых Монет</span></li>
+                                    <li>Высшей луны ➤ <span class="matter-amount">7 Кровавых Монет</span></li>
                                 </ul>
                             </div>
                             
                             <div class="matter-category">
                                 <h4>Тренировки и мероприятия</h4>
                                 <ul>
-                                    <li>Проведение тренировки ➤ <span class="matter-amount">3 материи</span></li>
-                                    <li>Участие в тренировке ➤ <span class="matter-amount">2 материи</span></li>
-                                    <li>Участие в мероприятии ➤ <span class="matter-amount">4 материи</span></li>
+                                    <li>Проведение тренировки ➤ <span class="matter-amount">3 Кровавые Монеты</span></li>
+                                    <li>Участие в тренировке ➤ <span class="matter-amount">2 Кровавые Монеты</span></li>
+                                    <li>Участие в мероприятии ➤ <span class="matter-amount">4 Кровавые Монеты</span></li>
                                 </ul>
                             </div>
                             
                             <div class="matter-category">
                                 <h4>Почтения</h4>
                                 <ul>
-                                    <li>1 степень ➤ <span class="matter-amount">5+ материй</span></li>
-                                    <li>2 степень ➤ <span class="matter-amount">10+ материй</span></li>
-                                    <li>3 степень ➤ <span class="matter-amount">15+ материй</span></li>
+                                    <li>1 степень ➤ <span class="matter-amount">5+ Кровавых Монет</span></li>
+                                    <li>2 степень ➤ <span class="matter-amount">10+ Кровавых Монет</span></li>
+                                    <li>3 степень ➤ <span class="matter-amount">15+ Кровавых Монет</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -1737,88 +1737,96 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Otokuma ➤ Demon</div>
-                                    <div class="rank-requirements">КД: 1 день</div>
+                                    <div class="rank-requirements">КД: 2 день</div>
                                 </div>
-                                <div class="rank-matter">5 материй</div>
+                                <div class="rank-matter">5 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Demon ➤ Keykon</div>
-                                    <div class="rank-requirements">КД: 1 день</div>
+                                    <div class="rank-requirements">КД: 2 день</div>
                                 </div>
-                                <div class="rank-matter">10 материй</div>
+                                <div class="rank-matter">10 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Keykon ➤ Hofuma</div>
-                                    <div class="rank-requirements">КД: 2 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
-                                <div class="rank-matter">15 материй</div>
+                                <div class="rank-matter">15 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Hofuma ➤ Chisuma</div>
-                                    <div class="rank-requirements">КД: 2 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
-                                <div class="rank-matter">20 материй</div>
+                                <div class="rank-matter">20 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Chisuma ➤ Chikuma</div>
-                                    <div class="rank-requirements">КД: 2 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
-                                <div class="rank-matter">25 материй</div>
+                                <div class="rank-matter">25 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Chikuma ➤ Asakuma</div>
-                                    <div class="rank-requirements">КД: 2 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
-                                <div class="rank-matter">30 материй</div>
+                                <div class="rank-matter">30 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Asakuma ➤ Hobura</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 4 дня</div>
                                 </div>
-                                <div class="rank-matter">35 материй</div>
+                                <div class="rank-matter">35 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Hobura ➤ Shateigashira</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 4 дня</div>
                                 </div>
-                                <div class="rank-matter">40 материй</div>
+                                <div class="rank-matter">40 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Shateigashira ➤ Wakagashira</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 4 дня</div>
                                 </div>
-                                <div class="rank-matter">45 материй</div>
+                                <div class="rank-matter">45 Кровавых Монет</div>
                             </div>
                             
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Wakagashira ➤ Tsukumon</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 4 дня</div>
                                 </div>
-                                <div class="rank-matter">50 материй</div>
+                                <div class="rank-matter">50 Кровавых Монет</div>
                             </div>
+                            <div class="rank-card">
+                                <div class="rank-info">
+                                    <div class="rank-name">Wakagashira ➤ Shiko</div>
+                                    <div class="rank-requirements">КД: 4 дня</div>
+                                </div>
+                                <div class="rank-matter">55 Кровавых Монет</div>
+                            </div>  
+                            
                         </div>
                         
                         <div class="progression-note">
                             <h4>Важная информация</h4>
-                            <p>Учет материи ведется самостоятельно. В отчет о повышении прикладывайте скриншоты ваших действий.</p>
-                            <p style="margin-top: 10px; font-size: 0.9em;">Материю можно выкупить за Йены у Старших Жнецов Мрака+</p>
+                            <p>Учет Кровавых Монет ведется самостоятельно. В отчет о повышении прикладывайте скриншоты ваших действий.</p>
+                            <p style="margin-top: 10px; font-size: 0.9em;">Кровавые Монеты можно выкупить за Йены у Старших Жнецов Мрака+</p>
                         </div>
                     </div>
                 </div>
