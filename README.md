@@ -299,7 +299,7 @@
         .symbol-section {
             text-align: center;
             padding: 60px 0;
-            margin: 40px 0;
+            margin: 100px 0;
         }
         
         .symbol-container {
@@ -1479,7 +1479,7 @@
                 <div class="page-header">
                     <h1>Демонический отряд «Мрак» (暗闇)</h1>
                     <p style="color: var(--light); max-width: 600px; margin: 0 auto; font-size: 1.2em;">
-                        Информация и ключевые моменты нашего братсва
+                        Информация и ключевые моменты нашего братства 
                     </p>
                 </div>
 
