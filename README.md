@@ -2362,7 +2362,136 @@
     
 })();
 </script>
-
+<script>
+(function() {
+    'use strict';
+    
+    // Стили
+    const style = document.createElement('style');
+    style.textContent = `
+        .snowflake-pretty {
+            position: fixed;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 1s ease;
+            filter: blur(0.3px) drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+            animation: sparkle 3s infinite alternate;
+        }
+        
+        .snowflake-pretty.visible {
+            opacity: var(--opacity);
+        }
+        
+        @keyframes sparkle {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .snow-toggle {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(100, 149, 237, 0.9);
+            border: 2px solid white;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Создание снежинок
+    const snowflakes = [];
+    const count = 80;
+    
+    for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake-pretty';
+        
+        const size = Math.random() * 5 + 2;
+        const opacity = Math.random() * 0.3 + 0.6;
+        
+        flake.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${Math.random() * window.innerWidth}px;
+            top: ${Math.random() * -100}px;
+            --opacity: ${opacity};
+        `;
+        
+        document.body.appendChild(flake);
+        
+        setTimeout(() => flake.classList.add('visible'), Math.random() * 500);
+        
+        snowflakes.push({
+            el: flake,
+            x: parseFloat(flake.style.left),
+            y: parseFloat(flake.style.top),
+            speed: Math.random() * 1 + 0.5,
+            wind: Math.random() * 0.6 - 0.3,
+            swing: Math.random() * Math.PI * 2,
+            rotation: 0
+        });
+    }
+    
+    // Анимация
+    let isRunning = true;
+    let animationId = null;
+    
+    function animate() {
+        if (!isRunning) return;
+        
+        snowflakes.forEach(f => {
+            f.y += f.speed;
+            f.x += f.wind;
+            
+            f.swing += 0.03;
+            f.x += Math.sin(f.swing) * 0.2;
+            
+            f.rotation += 0.5;
+            
+            if (f.y > window.innerHeight) {
+                f.y = -10;
+                f.x = Math.random() * window.innerWidth;
+            }
+            
+            if (f.x > window.innerWidth) f.x = 0;
+            if (f.x < 0) f.x = window.innerWidth;
+            
+            f.el.style.transform = `translate(${f.x}px, ${f.y}px) rotate(${f.rotation}deg)`;
+        });
+        
+        animationId = requestAnimationFrame(animate);
+    }
+    
+    // Кнопка управления
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'snow-toggle';
+    toggleBtn.innerHTML = '❄️';
+    toggleBtn.title = 'Включить/выключить снег';
+    toggleBtn.onclick = () => {
+        isRunning = !isRunning;
+        toggleBtn.innerHTML = isRunning ? '❄️' : '⛄';
+        if (isRunning) animate();
+        else if (animationId) cancelAnimationFrame(animationId);
+    };
+    document.body.appendChild(toggleBtn);
+    
+    // Запуск
+    animate();
+})();
+</script>
     
 </body>
 </html>
