@@ -1178,7 +1178,7 @@
             transform: translate(-50%, -50%);
             animation: cobwebCenter 3s infinite alternate;
         }
-        
+        /* 
         /* Летучие мыши */
         .bat {
             position: fixed;
@@ -1427,7 +1427,7 @@
             0% { height: 15px; }
             100% { height: 20px; }
         }
-        
+        */
         /* Хэллоуинские акценты в навигации */
         .halloween-nav-item {
             position: relative;
