@@ -299,7 +299,7 @@
         .symbol-section {
             text-align: center;
             padding: 60px 0;
-            margin: 100px 0;
+            margin: 40px 0;
         }
         
         .symbol-container {
