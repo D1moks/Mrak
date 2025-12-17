@@ -1064,9 +1064,9 @@
         }
         <link href="https://cdn.jsdelivr.net/gh/Alaev-Co/snowflakes/dist/snow.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/gh/Alaev-Co/snowflakes/dist/Snow.min.js"></script>
-<script>
-	new Snow ();
-</script>
+           <script>
+	         new Snow ();
+             </script>
         
         /* Улучшенные призраки */
         .ghost {
