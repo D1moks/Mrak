@@ -1346,9 +1346,9 @@
             text-align: center;
             margin: 20px 0 40px;
             padding: 15px;
-            background: linear-gradient(90deg, transparent, rgba(255, 117, 24, 0.2), transparent);
-            border-top: 1px solid rgba(255, 117, 24, 0.3);
-            border-bottom: 1px solid rgba(255, 117, 24, 0.3);
+            background: linear-gradient(90deg, transparent, rgba(60, 179, 113, 0.2), transparent);
+            border-top: 1px solid rgba(60, 179, 113, 0.3);
+            border-bottom: 1px solid rgba(60, 179, 113, 0.3);
             overflow: hidden;
             animation: bannerGlow 3s infinite alternate;
         }
