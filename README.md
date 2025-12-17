@@ -1433,7 +1433,7 @@
                             <i class="fas fa-ankh"></i>
                         </div>
                         <h3>Лор Жнецов Мрака</h3>
-                        <p>Узнай лор и ключевую информацию о отраде Мрака.</p>
+                        <p>Узнай лор и ключевую информацию о Отряде Мрака.</p>
                         <div class="feature-button halloween-button" onclick="showSection('symbol')">
                             Узнать лор
                         </div>
