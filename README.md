@@ -63,7 +63,7 @@
         /* ФОН С ВАШИМ ИЗОБРАЖЕНИЕМ */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1JjHZY.img?w=3600&h=1800&m=4&q=79') no-repeat center center fixed;
+            background: url('3db32463-2150-4c18-b1d1-7b64cf57a1d0.png') no-repeat center center fixed;
             background-size: cover;
             color: var(--white);
             min-height: 100vh;
