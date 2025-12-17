@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Отряд  - Хэллоуи</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎃</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -1322,7 +1322,7 @@
         }
         
         .halloween-nav-item::after {
-            content: '🎃';
+            content: '🎄';
             position: absolute;
             right: 10px;
             font-size: 0.8em;
@@ -1367,7 +1367,7 @@
         }
         
         .halloween-banner::before, .halloween-banner::after {
-            content: '🎃';
+            content: '🎄';
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -1690,7 +1690,7 @@
             <div id="main" class="section active">
                 <!-- ХЭЛЛОУИНСКИЙ БАННЕР -->
                 <div class="halloween-banner">
-                    <h2>🎃 Хэллоуин в Отряде Мрак Иль 🎃</h2>
+                    <h2>🎄 Хэллоуин в Отряде Мрак Иль 🎄</h2>
                     <p>Тайны тьмы оживают в эту ночь ужасов и мистики!</p>
                 </div>
                 
@@ -2105,7 +2105,7 @@
 
         <div class="footer">
             <p>© 2025 Отряд Мрак | s5.yufu.su:27017</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">Тень • Сила • Тайна • 🎃 Хэллоуин 🎃</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Тень • Сила • Тайна • 🎄 Хэллоуин 🎄</p>
         </div>
     </div>
 
