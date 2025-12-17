@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отряд  - Хэллоуи</title>
+    <title>Отряд МРАК - Новый Год</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -1080,7 +1080,7 @@
             color: var(--halloween-orange);
             font-size: 1.8em;
             margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(255, 117, 24, 0.5);
+            text-shadow: 0 0 10px rgba(60, 179, 113, 0.5);
             animation: textPulse 2s infinite alternate;
         }
         
@@ -1107,8 +1107,8 @@
         }
         
         @keyframes bannerGlow {
-            0% { box-shadow: 0 0 5px rgba(255, 117, 24, 0.3); }
-            100% { box-shadow: 0 0 20px rgba(255, 117, 24, 0.7); }
+            0% { box-shadow: 0 0 5px rgba(60, 179, 113, 0.3); }
+            100% { box-shadow: 0 0 20px rgba(60, 179, 113, 0.7); }
         }
         
         @keyframes textPulse {
@@ -1157,13 +1157,13 @@
         
         .halloween-button:hover {
             background: linear-gradient(45deg, var(--pumpkin), var(--halloween-orange)) !important;
-            box-shadow: 0 5px 15px rgba(255, 117, 24, 0.4) !important;
+            box-shadow: 0 5px 15px rgba(60, 179, 113, 0.4) !important;
             animation: none;
         }
         
         @keyframes buttonPulse {
-            0% { box-shadow: 0 0 5px rgba(255, 117, 24, 0.5); }
-            100% { box-shadow: 0 0 15px rgba(255, 117, 24, 0.8); }
+            0% { box-shadow: 0 0 5px rgba(60, 179, 113, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(60, 179, 113, 0.8); }
         }
         
         /* Адаптивность */
@@ -1828,7 +1828,7 @@
 
         <div class="footer">
             <p>© 2025 Отряд Мрак | s5.yufu.su:27017</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">Тень • Сила • Тайна • 🎄 Хэллоуин 🎄</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Мрак • Сила • Тайна • 🎄 Новый год 🎄</p>
         </div>
     </div>
 
