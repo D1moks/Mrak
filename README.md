@@ -1815,7 +1815,7 @@
                             </div>
                             <div class="rank-card">
                                 <div class="rank-info">
-                                    <div class="rank-name">Wakagashira ➤ Shiko</div>
+                                    <div class="rank-name">Tsukumon ➤ Shiko</div>
                                     <div class="rank-requirements">КД: 4 дня</div>
                                 </div>
                                 <div class="rank-matter">55 Кровавых Монет</div>
