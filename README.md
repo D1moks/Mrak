@@ -2362,194 +2362,155 @@
     
 })();
 </script>
+
 <script>
-// Реалистичные снежинки без кнопок
+// Прорисованные векторные снежинки
 (function() {
     'use strict';
     
-    // Проверяем, что мы в зимний период (декабрь-февраль)
-    const now = new Date();
-    const month = now.getMonth() + 1; // 1-12
-    const isWinter = month === 12 || month === 1 || month === 2;
-    if (!isWinter) return;
-    
-    // Конфигурация
+    // Настройки
     const config = {
-        // Количество и распределение
-        count: 85,
-        density: 1.2, // Плотность (влияет на распределение)
-        
-        // Физика снежинок
-        gravity: 0.1,       // Гравитация
-        mass: 0.05,         // Масса для инерции
-        airResistance: 0.95, // Сопротивление воздуха
+        // Количество и плотность
+        count: 45,
+        density: 1.0,
         
         // Размеры
         size: {
-            min: 1.5,
-            max: 6,
-            distribution: 2.5 // Коэффициент распределения (чем больше, тем больше маленьких)
+            min: 15,
+            max: 45,
+            scale: 0.8 // Коэффициент масштабирования (0.5-1.5)
         },
         
-        // Ветер и турбулентность
+        // Движение
+        speed: {
+            base: 0.8,
+            variance: 0.6
+        },
         wind: {
             base: 0.15,
-            variance: 0.25,
-            gusts: {
-                enabled: true,
-                frequency: 0.003, // Частота порывов
-                strength: 1.8     // Сила порывов
-            },
-            turbulence: 0.12      // Турбулентность
+            variance: 0.2,
+            changeRate: 0.001
         },
         
-        // Вращение и колебания
+        // Вращение
         rotation: {
             enabled: true,
-            speed: { min: -0.8, max: 0.8 },
-            wobble: 0.15 // Дрожание
+            speed: { min: -0.3, max: 0.3 },
+            wobble: 0.08
         },
         
         // Внешний вид
-        appearance: {
-            blur: true,
-            blurAmount: { min: 0.1, max: 0.4 },
-            glow: true,
-            glowIntensity: { min: 0.3, max: 0.7 },
-            opacity: { min: 0.4, max: 0.92 },
-            colorVariation: 0.1 // Вариация цвета (0-1)
+        opacity: { min: 0.3, max: 0.85 },
+        strokeWidth: { min: 0.8, max: 1.5 },
+        color: {
+            base: '#ffffff',
+            variants: [
+                'rgba(255, 255, 255, 1)',
+                'rgba(240, 248, 255, 1)', // AliceBlue
+                'rgba(230, 240, 255, 1)', // Очень светлый голубой
+                'rgba(255, 250, 240, 1)'  // FloralWhite
+            ]
         },
         
-        // Формы снежинок
-        shapes: [
-            'circle',      // Простые круглые
-            'soft',        // Мягкие размытые
-            'crystal',     // Кристаллические
-            'fluffy'       // Пушистые
-        ],
+        // Сложность узоров
+        complexity: { min: 4, max: 8 }, // Количество лучей
+        detail: { min: 1, max: 3 }, // Уровень детализации
         
-        // z-index
-        zIndex: 9998,
+        // Эффекты
+        glow: true,
+        sparkle: true,
+        twinkle: true,
         
         // Производительность
         fpsLimit: 60,
-        lazyLoad: true,    // Постепенная загрузка
-        lazyLoadDelay: 100 // Задержка между созданием
+        lazyLoad: true,
+        
+        // z-index
+        zIndex: 9998
     };
     
     let snowflakes = [];
     let animationId = null;
     let lastTime = 0;
-    let windGust = 0;
-    let windGustPhase = 0;
-    let isAnimating = true;
+    let windDirection = 0;
     
     // Создание стилей
     const style = document.createElement('style');
     style.textContent = `
-        .realistic-snowflake {
+        .art-snowflake {
             position: fixed;
             pointer-events: none;
             z-index: ${config.zIndex};
             opacity: 0;
             transform-origin: center;
             will-change: transform, opacity;
-            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
-            background: white;
+            transition: opacity 2s ease-out;
+            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.3));
         }
         
-        .realistic-snowflake.visible {
+        .art-snowflake svg {
+            width: 100%;
+            height: 100%;
+            filter: var(--filter);
+        }
+        
+        .art-snowflake.visible {
             opacity: var(--opacity);
         }
         
-        /* Формы снежинок */
-        .realistic-snowflake.circle {
-            border-radius: 50%;
+        /* Эффекты свечения */
+        .art-snowflake.glow svg {
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
         }
         
-        .realistic-snowflake.soft {
-            border-radius: 50%;
-            filter: blur(var(--blur)) brightness(1.1);
-            background: radial-gradient(
-                ellipse at center,
-                rgba(255, 255, 255, 0.9) 0%,
-                rgba(255, 255, 255, 0.6) 40%,
-                rgba(255, 255, 255, 0.2) 70%,
-                transparent 100%
-            );
+        /* Мерцание */
+        .art-snowflake.sparkle {
+            animation: gentle-sparkle 4s infinite ease-in-out;
         }
         
-        .realistic-snowflake.crystal {
-            border-radius: 50%;
-            background: 
-                radial-gradient(circle at 30% 30%, 
-                    rgba(255, 255, 255, 0.95) 0%,
-                    rgba(230, 240, 255, 0.8) 30%,
-                    rgba(210, 225, 245, 0.6) 60%,
-                    transparent 100%
-                ),
-                linear-gradient(45deg, 
-                    transparent 45%,
-                    rgba(255, 255, 255, 0.3) 50%,
-                    transparent 55%
-                ),
-                linear-gradient(-45deg, 
-                    transparent 45%,
-                    rgba(255, 255, 255, 0.3) 50%,
-                    transparent 55%
-                );
-            background-blend-mode: overlay;
-        }
-        
-        .realistic-snowflake.fluffy {
-            border-radius: 50%;
-            filter: blur(var(--blur));
-            background: 
-                radial-gradient(circle at 20% 20%, 
-                    rgba(255, 255, 255, 0.95) 0%,
-                    rgba(240, 248, 255, 0.7) 25%,
-                    rgba(230, 240, 250, 0.4) 50%,
-                    transparent 70%
-                ),
-                radial-gradient(circle at 80% 80%, 
-                    rgba(255, 255, 255, 0.8) 0%,
-                    rgba(240, 248, 255, 0.5) 25%,
-                    transparent 50%
-                );
-        }
-        
-        /* Эффект свечения */
-        .realistic-snowflake.glow {
-            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)) var(--blur-effect);
-            box-shadow: 0 0 var(--glow-size) rgba(255, 255, 255, var(--glow-intensity));
+        /* Переливчатость */
+        .art-snowflake.twinkle {
+            animation: subtle-twinkle 6s infinite alternate;
         }
         
         /* Анимации */
         @keyframes gentle-sparkle {
             0%, 100% { opacity: var(--opacity); }
-            50% { opacity: calc(var(--opacity) * 1.2); }
+            50% { opacity: calc(var(--opacity) * 1.3); }
         }
         
-        .realistic-snowflake.sparkle {
-            animation: gentle-sparkle 4s infinite ease-in-out;
-            animation-delay: var(--sparkle-delay);
+        @keyframes subtle-twinkle {
+            0% { filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.3)) brightness(0.95); }
+            100% { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5)) brightness(1.05); }
         }
         
-        /* Эффект накопления на нижней границе */
-        .snow-accumulation {
+        /* Эффект кристалла */
+        .art-snowflake.crystal {
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+        }
+        
+        /* Фоновый градиент для зимней атмосферы */
+        body::before {
+            content: '';
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            height: 0;
-            background: linear-gradient(to top, 
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(255, 255, 255, 0.05) 50%,
-                transparent 100%
-            );
-            z-index: ${config.zIndex - 1};
+            bottom: 0;
+            background: 
+                radial-gradient(
+                    ellipse at 20% 20%,
+                    rgba(135, 206, 235, 0.03) 0%,
+                    transparent 50%
+                ),
+                radial-gradient(
+                    ellipse at 80% 80%,
+                    rgba(176, 224, 230, 0.02) 0%,
+                    transparent 50%
+                );
             pointer-events: none;
-            transition: height 10s ease;
+            z-index: ${config.zIndex - 10};
+            mix-blend-mode: overlay;
         }
     `;
     
@@ -2564,54 +2525,139 @@
         return Math.floor(random(min, max));
     }
     
-    function randomGaussian(mean, std) {
-        let u = 0, v = 0;
-        while(u === 0) u = Math.random();
-        while(v === 0) v = Math.random();
-        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * std + mean;
+    function randomChoice(array) {
+        return array[randomInt(0, array.length)];
     }
     
-    function getSnowflakeSize() {
-        // Распределение размеров по степенному закону (больше маленьких)
-        const u = Math.random();
-        return config.size.min + (config.size.max - config.size.min) * 
-               Math.pow(u, config.size.distribution);
-    }
-    
-    function getWind() {
-        let wind = config.wind.base + random(-config.wind.variance, config.wind.variance);
+    // Генерация SVG снежинки
+    function generateSnowflakeSVG(size, complexity, detailLevel, color, strokeWidth) {
+        const center = size / 2;
+        const radius = size / 2 * 0.9;
+        const rays = complexity;
+        const angleStep = (2 * Math.PI) / rays;
         
-        // Порывы ветра
-        if (config.wind.gusts.enabled) {
-            windGustPhase += config.wind.gusts.frequency;
-            const gust = Math.sin(windGustPhase * 2 * Math.PI) * 
-                        config.wind.gusts.strength * 
-                        Math.random();
+        let pathData = '';
+        
+        // Основные лучи
+        for (let i = 0; i < rays; i++) {
+            const angle = i * angleStep;
+            const endX = center + Math.cos(angle) * radius;
+            const endY = center + Math.sin(angle) * radius;
             
-            // Случайные сильные порывы
-            if (Math.random() < 0.001) {
-                windGust = random(-config.wind.gusts.strength * 2, config.wind.gusts.strength * 2);
+            // Основной луч
+            pathData += `M ${center} ${center} L ${endX} ${endY} `;
+            
+            // Боковые ветви на основном луче
+            for (let branch = 1; branch <= detailLevel; branch++) {
+                const branchPos = 0.3 + (branch / (detailLevel + 1)) * 0.5;
+                const branchX = center + Math.cos(angle) * radius * branchPos;
+                const branchY = center + Math.sin(angle) * radius * branchPos;
+                const branchLength = radius * 0.15 * (1 - branch * 0.2);
+                
+                // Правая ветвь
+                const branchAngle1 = angle + Math.PI / 6;
+                const branchEndX1 = branchX + Math.cos(branchAngle1) * branchLength;
+                const branchEndY1 = branchY + Math.sin(branchAngle1) * branchLength;
+                pathData += `M ${branchX} ${branchY} L ${branchEndX1} ${branchEndY1} `;
+                
+                // Левая ветвь
+                const branchAngle2 = angle - Math.PI / 6;
+                const branchEndX2 = branchX + Math.cos(branchAngle2) * branchLength;
+                const branchEndY2 = branchY + Math.sin(branchAngle2) * branchLength;
+                pathData += `M ${branchX} ${branchY} L ${branchEndX2} ${branchEndY2} `;
+                
+                // Дополнительные маленькие веточки для большего уровня детализации
+                if (detailLevel >= 2 && branch === 1) {
+                    const smallBranchLength = branchLength * 0.6;
+                    
+                    const smallAngle1 = angle + Math.PI / 4;
+                    const smallEndX1 = branchX + Math.cos(smallAngle1) * smallBranchLength;
+                    const smallEndY1 = branchY + Math.sin(smallAngle1) * smallBranchLength;
+                    pathData += `M ${branchX} ${branchY} L ${smallEndX1} ${smallEndY1} `;
+                    
+                    const smallAngle2 = angle - Math.PI / 4;
+                    const smallEndX2 = branchX + Math.cos(smallAngle2) * smallBranchLength;
+                    const smallEndY2 = branchY + Math.sin(smallAngle2) * smallBranchLength;
+                    pathData += `M ${branchX} ${branchY} L ${smallEndX2} ${smallEndY2} `;
+                }
             }
             
-            wind += gust + windGust;
-            windGust *= 0.95; // Затухание порыва
+            // Внутренние украшения на кончике луча
+            if (detailLevel >= 2) {
+                const tipX = endX;
+                const tipY = endY;
+                const decorationSize = radius * 0.08;
+                
+                // Кружок на кончике
+                pathData += `M ${tipX} ${tipY} m -${decorationSize}, 0 a ${decorationSize},${decorationSize} 0 1,0 ${decorationSize*2},0 a ${decorationSize},${decorationSize} 0 1,0 -${decorationSize*2},0 `;
+                
+                // Маленькие ответвления перед кончиком
+                const preTipPos = 0.85;
+                const preTipX = center + Math.cos(angle) * radius * preTipPos;
+                const preTipY = center + Math.sin(angle) * radius * preTipPos;
+                const smallTipLength = radius * 0.07;
+                
+                const smallAngle1 = angle + Math.PI / 3;
+                const smallTipX1 = preTipX + Math.cos(smallAngle1) * smallTipLength;
+                const smallTipY1 = preTipY + Math.sin(smallAngle1) * smallTipLength;
+                pathData += `M ${preTipX} ${preTipY} L ${smallTipX1} ${smallTipY1} `;
+                
+                const smallAngle2 = angle - Math.PI / 3;
+                const smallTipX2 = preTipX + Math.cos(smallAngle2) * smallTipLength;
+                const smallTipY2 = preTipY + Math.sin(smallAngle2) * smallTipLength;
+                pathData += `M ${preTipX} ${preTipY} L ${smallTipX2} ${smallTipY2} `;
+            }
         }
         
-        return wind;
+        // Внутренний шестиугольник/круг
+        const innerShapeRadius = radius * 0.2;
+        if (detailLevel >= 2) {
+            // Шестиугольник
+            for (let i = 0; i < 6; i++) {
+                const angle = i * (Math.PI / 3);
+                const x1 = center + Math.cos(angle) * innerShapeRadius;
+                const y1 = center + Math.sin(angle) * innerShapeRadius;
+                const x2 = center + Math.cos(angle + Math.PI / 3) * innerShapeRadius;
+                const y2 = center + Math.sin(angle + Math.PI / 3) * innerShapeRadius;
+                pathData += `M ${x1} ${y1} L ${x2} ${y2} `;
+            }
+        } else {
+            // Простой круг
+            pathData += `M ${center} ${center} m -${innerShapeRadius}, 0 a ${innerShapeRadius},${innerShapeRadius} 0 1,0 ${innerShapeRadius*2},0 a ${innerShapeRadius},${innerShapeRadius} 0 1,0 -${innerShapeRadius*2},0 `;
+        }
+        
+        // Точки на пересечениях
+        if (detailLevel >= 3) {
+            const dotRadius = radius * 0.03;
+            for (let i = 0; i < rays; i++) {
+                const angle = i * angleStep;
+                for (let dotPos = 0.4; dotPos <= 0.7; dotPos += 0.15) {
+                    const dotX = center + Math.cos(angle) * radius * dotPos;
+                    const dotY = center + Math.sin(angle) * radius * dotPos;
+                    pathData += `M ${dotX} ${dotY} m -${dotRadius}, 0 a ${dotRadius},${dotRadius} 0 1,0 ${dotRadius*2},0 a ${dotRadius},${dotRadius} 0 1,0 -${dotRadius*2},0 `;
+                }
+            }
+        }
+        
+        return `
+            <svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+                <path d="${pathData}" 
+                      stroke="${color}" 
+                      stroke-width="${strokeWidth}" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      fill="none"
+                      stroke-opacity="0.9"/>
+            </svg>
+        `;
     }
     
     // Создание снежинок
     function createSnowflakes() {
-        // Создаем эффект накопления снега
-        const accumulation = document.createElement('div');
-        accumulation.className = 'snow-accumulation';
-        document.body.appendChild(accumulation);
-        
-        // Постепенное создание снежинок
         let created = 0;
         
         function createBatch() {
-            const batchSize = Math.min(15, config.count - created);
+            const batchSize = Math.min(8, config.count - created);
             
             for (let i = 0; i < batchSize; i++) {
                 createSnowflake();
@@ -2619,7 +2665,7 @@
             }
             
             if (created < config.count) {
-                setTimeout(createBatch, config.lazyLoadDelay);
+                setTimeout(createBatch, 200);
             }
         }
         
@@ -2628,261 +2674,230 @@
     
     function createSnowflake() {
         const snowflake = document.createElement('div');
+        snowflake.className = 'art-snowflake';
         
-        // Выбор формы
-        const shape = config.shapes[randomInt(0, config.shapes.length)];
-        snowflake.className = `realistic-snowflake ${shape}`;
+        // Параметры снежинки
+        const size = random(config.size.min, config.size.max) * config.size.scale;
+        const opacity = random(config.opacity.min, config.opacity.max);
+        const color = randomChoice(config.color.variants);
+        const strokeWidth = random(config.strokeWidth.min, config.strokeWidth.max);
+        const complexity = randomInt(config.complexity.min, config.complexity.max);
+        const detailLevel = randomInt(config.detail.min, config.detail.max);
         
-        // Размер
-        const size = getSnowflakeSize();
-        
-        // Цвет и прозрачность
-        const opacity = random(config.appearance.opacity.min, config.appearance.opacity.max);
-        let color = 'rgba(255, 255, 255, 1)';
-        
-        if (config.appearance.colorVariation > 0) {
-            const variation = random(-config.appearance.colorVariation, config.appearance.colorVariation);
-            color = `rgba(${255 + variation * 50}, ${255 + variation * 30}, ${255 + variation * 10}, 1)`;
-        }
-        
-        // Эффекты
-        const blur = config.appearance.blur ? 
-            random(config.appearance.blurAmount.min, config.appearance.blurAmount.max) : 0;
-        
-        const glow = config.appearance.glow ? 
-            random(config.appearance.glowIntensity.min, config.appearance.glowIntensity.max) : 0;
-        
-        // Позиция (более реалистичное распределение)
-        const x = random(-50, window.innerWidth + 50);
-        const y = random(-200, -50);
+        // Генерация уникальной снежинки
+        const svgHTML = generateSnowflakeSVG(size, complexity, detailLevel, color, strokeWidth);
         
         // Устанавливаем стили
         snowflake.style.cssText = `
             width: ${size}px;
             height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
+            left: ${random(-50, window.innerWidth + 50)}px;
+            top: ${random(-100, -20)}px;
             --opacity: ${opacity};
-            --blur: ${blur}px;
-            --blur-effect: ${config.appearance.blur ? `blur(${blur}px)` : 'none'};
-            --glow-intensity: ${glow};
-            --glow-size: ${size * 0.8}px;
-            --sparkle-delay: ${random(0, 4)}s;
-            background-color: ${color};
         `;
         
-        // Эффекты
-        if (config.appearance.glow) snowflake.classList.add('glow');
-        if (Math.random() > 0.7) snowflake.classList.add('sparkle');
+        snowflake.innerHTML = svgHTML;
+        
+        // Добавляем эффекты
+        if (config.glow) snowflake.classList.add('glow');
+        if (config.sparkle) snowflake.classList.add('sparkle');
+        if (config.twinkle && Math.random() > 0.5) snowflake.classList.add('twinkle');
+        if (detailLevel >= 2) snowflake.classList.add('crystal');
         
         document.body.appendChild(snowflake);
         
-        // Физические свойства
+        // Физические параметры
         const velocity = {
-            x: random(-0.5, 0.5),
-            y: random(0.2, 0.5)
-        };
-        
-        const acceleration = {
-            x: 0,
-            y: config.gravity
+            x: random(-0.3, 0.3),
+            y: random(0.3, 0.8)
         };
         
         // Данные снежинки
         snowflakes.push({
             element: snowflake,
-            x: x,
-            y: y,
+            x: parseFloat(snowflake.style.left),
+            y: parseFloat(snowflake.style.top),
             size: size,
-            mass: config.mass * (size / config.size.max),
             velocity: velocity,
-            acceleration: acceleration,
             rotation: random(0, 360),
             rotationSpeed: config.rotation.enabled ? 
                 random(config.rotation.speed.min, config.rotation.speed.max) : 0,
             wobble: random(0, Math.PI * 2),
-            wobbleSpeed: random(0.02, 0.08),
-            shape: shape,
+            wobbleSpeed: random(0.02, 0.06),
             opacity: opacity,
-            terminalVelocity: random(0.8, 1.5), // Максимальная скорость падения
-            turbulence: random(0, Math.PI * 2)
+            complexity: complexity,
+            windResistance: random(0.8, 1.2) // Сопротивление ветру
         });
         
         // Плавное появление
         setTimeout(() => {
             snowflake.classList.add('visible');
-        }, random(0, 1000));
+        }, random(0, 800));
     }
     
-    // Физический движок
-    function updatePhysics(deltaTime) {
-        const wind = getWind();
-        const timeFactor = deltaTime / 16.67; // Нормализация к 60 FPS
+    // Анимация
+    function animate(currentTime) {
+        if (!lastTime) lastTime = currentTime;
+        const deltaTime = Math.min(currentTime - lastTime, 100);
         
-        snowflakes.forEach((flake, index) => {
-            // Применяем гравитацию
-            flake.acceleration.y = config.gravity;
+        // Плавное изменение ветра
+        windDirection += random(-config.wind.changeRate, config.wind.changeRate);
+        const currentWind = Math.sin(windDirection) * config.wind.base + 
+                           random(-config.wind.variance, config.wind.variance);
+        
+        // Обновление каждой снежинки
+        snowflakes.forEach((flake) => {
+            // Применяем гравитацию с небольшим ускорением
+            flake.velocity.y = Math.min(flake.velocity.y + 0.001, 1.2);
             
-            // Применяем ветер с учетом массы
-            flake.acceleration.x = (wind / flake.mass) * timeFactor;
-            
-            // Турбулентность
-            if (config.wind.turbulence > 0) {
-                flake.turbulence += 0.05;
-                flake.acceleration.x += Math.sin(flake.turbulence) * config.wind.turbulence * timeFactor;
-            }
+            // Применяем ветер с учетом сопротивления
+            flake.velocity.x = (flake.velocity.x + currentWind / flake.windResistance) * 0.99;
             
             // Колебания
-            flake.wobble += flake.wobbleSpeed * timeFactor;
-            flake.acceleration.x += Math.sin(flake.wobble) * config.rotation.wobble * timeFactor;
+            flake.wobble += flake.wobbleSpeed;
+            flake.velocity.x += Math.sin(flake.wobble) * config.rotation.wobble;
             
-            // Обновляем скорость с учетом сопротивления воздуха
-            flake.velocity.x = (flake.velocity.x + flake.acceleration.x) * config.airResistance;
-            flake.velocity.y = (flake.velocity.y + flake.acceleration.y) * config.airResistance;
+            // Обновление позиции
+            flake.x += flake.velocity.x * (deltaTime / 16);
+            flake.y += flake.velocity.y * (deltaTime / 16);
             
-            // Ограничиваем максимальную скорость
-            flake.velocity.y = Math.min(flake.velocity.y, flake.terminalVelocity);
-            
-            // Обновляем позицию
-            flake.x += flake.velocity.x * timeFactor;
-            flake.y += flake.velocity.y * timeFactor;
-            
-            // Обновляем вращение
-            flake.rotation += flake.rotationSpeed * timeFactor;
+            // Вращение
+            flake.rotation += flake.rotationSpeed;
             
             // Проверка границ
-            if (flake.y > window.innerHeight + 20) {
+            if (flake.y > window.innerHeight + 50) {
                 resetSnowflake(flake);
             }
             
-            if (flake.x > window.innerWidth + 50) {
-                flake.x = -50;
-            } else if (flake.x < -50) {
-                flake.x = window.innerWidth + 50;
+            if (flake.x > window.innerWidth + 60) {
+                flake.x = -60;
+            } else if (flake.x < -60) {
+                flake.x = window.innerWidth + 60;
             }
             
-            // Обновляем элемент
+            // Обновление отображения
             flake.element.style.transform = 
                 `translate(${flake.x}px, ${flake.y}px) rotate(${flake.rotation}deg)`;
             
-            // Легкое изменение прозрачности в зависимости от скорости
-            const speedFactor = Math.abs(flake.velocity.y) / flake.terminalVelocity;
-            flake.element.style.opacity = Math.min(flake.opacity, speedFactor * 1.5);
+            // Легкое изменение прозрачности при движении
+            const speed = Math.sqrt(flake.velocity.x * flake.velocity.x + 
+                                  flake.velocity.y * flake.velocity.y);
+            const opacityVariation = Math.sin(currentTime / 1000 + flake.x * 0.01) * 0.1;
+            flake.element.style.opacity = Math.min(1, 
+                flake.opacity * (0.9 + speed * 0.1 + opacityVariation));
         });
+        
+        lastTime = currentTime;
+        animationId = requestAnimationFrame(animate);
     }
     
     function resetSnowflake(flake) {
-        // Сохраняем часть горизонтальной скорости для реалистичности
-        const horizontalMomentum = flake.velocity.x * 0.3;
-        
-        flake.y = random(-200, -50);
+        flake.y = random(-100, -30);
         flake.x = random(-50, window.innerWidth + 50);
         
-        // Сброс физики
-        flake.velocity = {
-            x: horizontalMomentum + random(-0.3, 0.3),
-            y: random(0.1, 0.4)
-        };
+        // Сохраняем часть горизонтальной скорости для непрерывности
+        flake.velocity.x *= 0.5;
+        flake.velocity.y = random(0.3, 0.8);
         
-        flake.acceleration = {
-            x: 0,
-            y: config.gravity
-        };
-        
-        flake.rotation = random(0, 360);
-        flake.rotationSpeed = config.rotation.enabled ? 
-            random(config.rotation.speed.min, config.rotation.speed.max) : 0;
-        
-        flake.terminalVelocity = random(0.8, 1.5);
+        // Случайное изменение скорости вращения
+        flake.rotationSpeed = random(config.rotation.speed.min, config.rotation.speed.max);
         
         // Плавное появление
         flake.element.classList.remove('visible');
         setTimeout(() => {
             flake.element.classList.add('visible');
-        }, 100);
-    }
-    
-    // Основной цикл анимации
-    function animate(currentTime) {
-        if (!isAnimating) return;
-        
-        // Ограничение FPS
-        if (!lastTime) lastTime = currentTime;
-        const deltaTime = currentTime - lastTime;
-        
-        if (deltaTime > 1000 / config.fpsLimit) {
-            updatePhysics(deltaTime);
-            lastTime = currentTime;
-        }
-        
-        animationId = requestAnimationFrame(animate);
+        }, 300);
     }
     
     // Обработка изменения размера окна
     function handleResize() {
-        // Плавное обновление позиций снежинок
         snowflakes.forEach(flake => {
             if (flake.x > window.innerWidth) {
-                flake.x = window.innerWidth - 10;
+                flake.x = window.innerWidth - 20;
             }
-            if (flake.x < -10) {
-                flake.x = window.innerWidth + 10;
+            if (flake.x < -20) {
+                flake.x = window.innerWidth + 20;
             }
         });
-        
-        // Обновляем эффект накопления снега
-        const accumulation = document.querySelector('.snow-accumulation');
-        if (accumulation) {
-            // Динамическая высота в зависимости от количества снежинок внизу
-            const flakesAtBottom = snowflakes.filter(f => 
-                f.y > window.innerHeight - 50
-            ).length;
-            
-            const accumulationHeight = Math.min(30, flakesAtBottom * 0.3);
-            accumulation.style.height = `${accumulationHeight}px`;
-        }
     }
     
-    // Автоматическая пауза при неактивной вкладке
+    // Автоматическая пауза при скрытии вкладки
     function handleVisibilityChange() {
         if (document.hidden) {
-            isAnimating = false;
+            // Плавное уменьшение прозрачности
+            snowflakes.forEach(flake => {
+                flake.element.style.transition = 'opacity 1s ease';
+                flake.element.style.opacity = '0.2';
+            });
+            
             if (animationId) {
                 cancelAnimationFrame(animationId);
                 animationId = null;
             }
         } else {
-            isAnimating = true;
+            // Плавное восстановление
+            snowflakes.forEach(flake => {
+                flake.element.style.opacity = '';
+                setTimeout(() => {
+                    flake.element.style.transition = '';
+                }, 1000);
+            });
+            
             lastTime = performance.now();
             animationId = requestAnimationFrame(animate);
         }
     }
     
-    // Инициализация
-    function init() {
-        // Добавляем легкий зимний фон
-        const winterOverlay = document.createElement('div');
-        winterOverlay.style.cssText = `
+    // Создание фоновых эффектов
+    function createBackgroundEffects() {
+        // Эффект легкой дымки
+        const haze = document.createElement('div');
+        haze.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
+            background: 
+                radial-gradient(
+                    circle at 20% 30%,
+                    rgba(255, 255, 255, 0.02) 0%,
+                    transparent 40%
+                ),
+                radial-gradient(
+                    circle at 80% 70%,
+                    rgba(230, 240, 255, 0.015) 0%,
+                    transparent 40%
+                );
             pointer-events: none;
-            z-index: ${config.zIndex - 2};
-            background: linear-gradient(
-                to bottom,
-                rgba(135, 206, 235, 0.02) 0%,
-                rgba(176, 224, 230, 0.01) 100%
-            );
-            mix-blend-mode: overlay;
+            z-index: ${config.zIndex - 5};
+            mix-blend-mode: screen;
+            animation: gentle-drift 40s infinite linear;
         `;
-        document.body.appendChild(winterOverlay);
         
-        // Создаем снежинки
+        const hazeStyle = document.createElement('style');
+        hazeStyle.textContent = `
+            @keyframes gentle-drift {
+                0% { transform: translate(0, 0) scale(1); }
+                33% { transform: translate(1%, 1%) scale(1.01); }
+                66% { transform: translate(-1%, -1%) scale(0.99); }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+        `;
+        
+        document.head.appendChild(hazeStyle);
+        document.body.appendChild(haze);
+    }
+    
+    // Инициализация
+    function init() {
+        // Только в зимние месяцы
+        const month = new Date().getMonth() + 1;
+        if (month !== 12 && month !== 1 && month !== 2) return;
+        
+        createBackgroundEffects();
         createSnowflakes();
         
-        // Запускаем анимацию
         lastTime = performance.now();
         animationId = requestAnimationFrame(animate);
         
@@ -2890,42 +2905,12 @@
         window.addEventListener('resize', handleResize);
         document.addEventListener('visibilitychange', handleVisibilityChange);
         
-        // Автоматическая адаптация производительности
-        let frameCount = 0;
-        let lastFpsCheck = performance.now();
-        
-        function monitorPerformance() {
-            frameCount++;
-            const now = performance.now();
-            
-            if (now - lastFpsCheck > 1000) {
-                const fps = Math.round((frameCount * 1000) / (now - lastFpsCheck));
-                
-                // Автоматическое снижение количества снежинок при низком FPS
-                if (fps < 30 && snowflakes.length > 30) {
-                    // Плавно удаляем часть снежинок
-                    const toRemove = Math.floor(snowflakes.length * 0.1);
-                    for (let i = 0; i < toRemove; i++) {
-                        const flake = snowflakes.pop();
-                        if (flake && flake.element.parentNode) {
-                            flake.element.style.opacity = '0';
-                            setTimeout(() => {
-                                if (flake.element.parentNode) {
-                                    flake.element.parentNode.removeChild(flake.element);
-                                }
-                            }, 1000);
-                        }
-                    }
-                }
-                
-                frameCount = 0;
-                lastFpsCheck = now;
+        // Периодическое обновление для разнообразия
+        setInterval(() => {
+            if (snowflakes.length < config.count * 0.9 && Math.random() > 0.7) {
+                createSnowflake();
             }
-            
-            requestAnimationFrame(monitorPerformance);
-        }
-        
-        monitorPerformance();
+        }, 5000);
     }
     
     // Запуск
@@ -2937,65 +2922,89 @@
 })();
 </script>
 
-<!-- Минимальный CSS для улучшения вида -->
+<!-- Дополнительные стили для красоты -->
 <style>
-    /* Легкие эффекты для улучшения восприятия снега */
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        pointer-events: none;
-        background: 
-            radial-gradient(
-                circle at 20% 80%,
-                rgba(255, 255, 255, 0.03) 0%,
-                transparent 50%
-            ),
-            radial-gradient(
-                circle at 80% 20%,
-                rgba(255, 255, 255, 0.02) 0%,
-                transparent 50%
-            );
-        z-index: 9997;
-        animation: gentle-drift 60s infinite linear;
-    }
-    
-    @keyframes gentle-drift {
-        0% { transform: translate(0, 0); }
-        25% { transform: translate(-1%, 1%); }
-        50% { transform: translate(-1%, -1%); }
-        75% { transform: translate(1%, -1%); }
-        100% { transform: translate(0, 0); }
-    }
-    
-    /* Эффект холодного стекла для контента */
-    .content, article, main, .container {
+    /* Улучшение контраста текста */
+    body {
         position: relative;
     }
     
-    .content::after, article::after, main::after, .container::after {
+    /* Эффект легкого свечения вокруг текста */
+    h1, h2, h3, h4, h5, h6 {
+        position: relative;
+        z-index: ${config?.zIndex + 1 || 10000};
+    }
+    
+    /* Эффект кристаллизации для изображений */
+    img {
+        transition: filter 0.5s ease;
+    }
+    
+    img:hover {
+        filter: brightness(1.05) contrast(1.02);
+    }
+    
+    /* Легкий эффект мороза для контента */
+    .content-wrapper, main, article {
+        position: relative;
+    }
+    
+    .content-wrapper::after, main::after, article::after {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0.01) 0%,
-            rgba(240, 248, 255, 0.005) 100%
-        );
+        background: 
+            linear-gradient(
+                45deg,
+                transparent 48%,
+                rgba(255, 255, 255, 0.01) 50%,
+                transparent 52%
+            ),
+            linear-gradient(
+                -45deg,
+                transparent 48%,
+                rgba(255, 255, 255, 0.01) 50%,
+                transparent 52%
+            );
+        background-size: 20px 20px;
         pointer-events: none;
         z-index: 1;
+        opacity: 0.1;
         mix-blend-mode: overlay;
     }
     
-    /* Улучшение контраста для текста на фоне снега */
-    h1, h2, h3, h4, h5, h6, p, li {
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    /* Эффект для ссылок */
+    a {
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    a:hover {
+        text-shadow: 0 0 8px rgba(135, 206, 235, 0.3);
+    }
+    
+    /* Эффект для кнопок */
+    button:not([class*="snow"]) {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    button:not([class*="snow"])::after {
+        content: '❄';
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    button:not([class*="snow"]):hover::after {
+        opacity: 0.5;
     }
 </style>
     
