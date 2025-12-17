@@ -2362,7 +2362,642 @@
     
 })();
 </script>
+<script>
+// Реалистичные снежинки без кнопок
+(function() {
+    'use strict';
+    
+    // Проверяем, что мы в зимний период (декабрь-февраль)
+    const now = new Date();
+    const month = now.getMonth() + 1; // 1-12
+    const isWinter = month === 12 || month === 1 || month === 2;
+    if (!isWinter) return;
+    
+    // Конфигурация
+    const config = {
+        // Количество и распределение
+        count: 85,
+        density: 1.2, // Плотность (влияет на распределение)
+        
+        // Физика снежинок
+        gravity: 0.1,       // Гравитация
+        mass: 0.05,         // Масса для инерции
+        airResistance: 0.95, // Сопротивление воздуха
+        
+        // Размеры
+        size: {
+            min: 1.5,
+            max: 6,
+            distribution: 2.5 // Коэффициент распределения (чем больше, тем больше маленьких)
+        },
+        
+        // Ветер и турбулентность
+        wind: {
+            base: 0.15,
+            variance: 0.25,
+            gusts: {
+                enabled: true,
+                frequency: 0.003, // Частота порывов
+                strength: 1.8     // Сила порывов
+            },
+            turbulence: 0.12      // Турбулентность
+        },
+        
+        // Вращение и колебания
+        rotation: {
+            enabled: true,
+            speed: { min: -0.8, max: 0.8 },
+            wobble: 0.15 // Дрожание
+        },
+        
+        // Внешний вид
+        appearance: {
+            blur: true,
+            blurAmount: { min: 0.1, max: 0.4 },
+            glow: true,
+            glowIntensity: { min: 0.3, max: 0.7 },
+            opacity: { min: 0.4, max: 0.92 },
+            colorVariation: 0.1 // Вариация цвета (0-1)
+        },
+        
+        // Формы снежинок
+        shapes: [
+            'circle',      // Простые круглые
+            'soft',        // Мягкие размытые
+            'crystal',     // Кристаллические
+            'fluffy'       // Пушистые
+        ],
+        
+        // z-index
+        zIndex: 9998,
+        
+        // Производительность
+        fpsLimit: 60,
+        lazyLoad: true,    // Постепенная загрузка
+        lazyLoadDelay: 100 // Задержка между созданием
+    };
+    
+    let snowflakes = [];
+    let animationId = null;
+    let lastTime = 0;
+    let windGust = 0;
+    let windGustPhase = 0;
+    let isAnimating = true;
+    
+    // Создание стилей
+    const style = document.createElement('style');
+    style.textContent = `
+        .realistic-snowflake {
+            position: fixed;
+            pointer-events: none;
+            z-index: ${config.zIndex};
+            opacity: 0;
+            transform-origin: center;
+            will-change: transform, opacity;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+        }
+        
+        .realistic-snowflake.visible {
+            opacity: var(--opacity);
+        }
+        
+        /* Формы снежинок */
+        .realistic-snowflake.circle {
+            border-radius: 50%;
+        }
+        
+        .realistic-snowflake.soft {
+            border-radius: 50%;
+            filter: blur(var(--blur)) brightness(1.1);
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255, 255, 255, 0.9) 0%,
+                rgba(255, 255, 255, 0.6) 40%,
+                rgba(255, 255, 255, 0.2) 70%,
+                transparent 100%
+            );
+        }
+        
+        .realistic-snowflake.crystal {
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 30% 30%, 
+                    rgba(255, 255, 255, 0.95) 0%,
+                    rgba(230, 240, 255, 0.8) 30%,
+                    rgba(210, 225, 245, 0.6) 60%,
+                    transparent 100%
+                ),
+                linear-gradient(45deg, 
+                    transparent 45%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 55%
+                ),
+                linear-gradient(-45deg, 
+                    transparent 45%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 55%
+                );
+            background-blend-mode: overlay;
+        }
+        
+        .realistic-snowflake.fluffy {
+            border-radius: 50%;
+            filter: blur(var(--blur));
+            background: 
+                radial-gradient(circle at 20% 20%, 
+                    rgba(255, 255, 255, 0.95) 0%,
+                    rgba(240, 248, 255, 0.7) 25%,
+                    rgba(230, 240, 250, 0.4) 50%,
+                    transparent 70%
+                ),
+                radial-gradient(circle at 80% 80%, 
+                    rgba(255, 255, 255, 0.8) 0%,
+                    rgba(240, 248, 255, 0.5) 25%,
+                    transparent 50%
+                );
+        }
+        
+        /* Эффект свечения */
+        .realistic-snowflake.glow {
+            filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)) var(--blur-effect);
+            box-shadow: 0 0 var(--glow-size) rgba(255, 255, 255, var(--glow-intensity));
+        }
+        
+        /* Анимации */
+        @keyframes gentle-sparkle {
+            0%, 100% { opacity: var(--opacity); }
+            50% { opacity: calc(var(--opacity) * 1.2); }
+        }
+        
+        .realistic-snowflake.sparkle {
+            animation: gentle-sparkle 4s infinite ease-in-out;
+            animation-delay: var(--sparkle-delay);
+        }
+        
+        /* Эффект накопления на нижней границе */
+        .snow-accumulation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background: linear-gradient(to top, 
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 100%
+            );
+            z-index: ${config.zIndex - 1};
+            pointer-events: none;
+            transition: height 10s ease;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    
+    // Вспомогательные функции
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    
+    function randomInt(min, max) {
+        return Math.floor(random(min, max));
+    }
+    
+    function randomGaussian(mean, std) {
+        let u = 0, v = 0;
+        while(u === 0) u = Math.random();
+        while(v === 0) v = Math.random();
+        return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * std + mean;
+    }
+    
+    function getSnowflakeSize() {
+        // Распределение размеров по степенному закону (больше маленьких)
+        const u = Math.random();
+        return config.size.min + (config.size.max - config.size.min) * 
+               Math.pow(u, config.size.distribution);
+    }
+    
+    function getWind() {
+        let wind = config.wind.base + random(-config.wind.variance, config.wind.variance);
+        
+        // Порывы ветра
+        if (config.wind.gusts.enabled) {
+            windGustPhase += config.wind.gusts.frequency;
+            const gust = Math.sin(windGustPhase * 2 * Math.PI) * 
+                        config.wind.gusts.strength * 
+                        Math.random();
+            
+            // Случайные сильные порывы
+            if (Math.random() < 0.001) {
+                windGust = random(-config.wind.gusts.strength * 2, config.wind.gusts.strength * 2);
+            }
+            
+            wind += gust + windGust;
+            windGust *= 0.95; // Затухание порыва
+        }
+        
+        return wind;
+    }
+    
+    // Создание снежинок
+    function createSnowflakes() {
+        // Создаем эффект накопления снега
+        const accumulation = document.createElement('div');
+        accumulation.className = 'snow-accumulation';
+        document.body.appendChild(accumulation);
+        
+        // Постепенное создание снежинок
+        let created = 0;
+        
+        function createBatch() {
+            const batchSize = Math.min(15, config.count - created);
+            
+            for (let i = 0; i < batchSize; i++) {
+                createSnowflake();
+                created++;
+            }
+            
+            if (created < config.count) {
+                setTimeout(createBatch, config.lazyLoadDelay);
+            }
+        }
+        
+        createBatch();
+    }
+    
+    function createSnowflake() {
+        const snowflake = document.createElement('div');
+        
+        // Выбор формы
+        const shape = config.shapes[randomInt(0, config.shapes.length)];
+        snowflake.className = `realistic-snowflake ${shape}`;
+        
+        // Размер
+        const size = getSnowflakeSize();
+        
+        // Цвет и прозрачность
+        const opacity = random(config.appearance.opacity.min, config.appearance.opacity.max);
+        let color = 'rgba(255, 255, 255, 1)';
+        
+        if (config.appearance.colorVariation > 0) {
+            const variation = random(-config.appearance.colorVariation, config.appearance.colorVariation);
+            color = `rgba(${255 + variation * 50}, ${255 + variation * 30}, ${255 + variation * 10}, 1)`;
+        }
+        
+        // Эффекты
+        const blur = config.appearance.blur ? 
+            random(config.appearance.blurAmount.min, config.appearance.blurAmount.max) : 0;
+        
+        const glow = config.appearance.glow ? 
+            random(config.appearance.glowIntensity.min, config.appearance.glowIntensity.max) : 0;
+        
+        // Позиция (более реалистичное распределение)
+        const x = random(-50, window.innerWidth + 50);
+        const y = random(-200, -50);
+        
+        // Устанавливаем стили
+        snowflake.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            --opacity: ${opacity};
+            --blur: ${blur}px;
+            --blur-effect: ${config.appearance.blur ? `blur(${blur}px)` : 'none'};
+            --glow-intensity: ${glow};
+            --glow-size: ${size * 0.8}px;
+            --sparkle-delay: ${random(0, 4)}s;
+            background-color: ${color};
+        `;
+        
+        // Эффекты
+        if (config.appearance.glow) snowflake.classList.add('glow');
+        if (Math.random() > 0.7) snowflake.classList.add('sparkle');
+        
+        document.body.appendChild(snowflake);
+        
+        // Физические свойства
+        const velocity = {
+            x: random(-0.5, 0.5),
+            y: random(0.2, 0.5)
+        };
+        
+        const acceleration = {
+            x: 0,
+            y: config.gravity
+        };
+        
+        // Данные снежинки
+        snowflakes.push({
+            element: snowflake,
+            x: x,
+            y: y,
+            size: size,
+            mass: config.mass * (size / config.size.max),
+            velocity: velocity,
+            acceleration: acceleration,
+            rotation: random(0, 360),
+            rotationSpeed: config.rotation.enabled ? 
+                random(config.rotation.speed.min, config.rotation.speed.max) : 0,
+            wobble: random(0, Math.PI * 2),
+            wobbleSpeed: random(0.02, 0.08),
+            shape: shape,
+            opacity: opacity,
+            terminalVelocity: random(0.8, 1.5), // Максимальная скорость падения
+            turbulence: random(0, Math.PI * 2)
+        });
+        
+        // Плавное появление
+        setTimeout(() => {
+            snowflake.classList.add('visible');
+        }, random(0, 1000));
+    }
+    
+    // Физический движок
+    function updatePhysics(deltaTime) {
+        const wind = getWind();
+        const timeFactor = deltaTime / 16.67; // Нормализация к 60 FPS
+        
+        snowflakes.forEach((flake, index) => {
+            // Применяем гравитацию
+            flake.acceleration.y = config.gravity;
+            
+            // Применяем ветер с учетом массы
+            flake.acceleration.x = (wind / flake.mass) * timeFactor;
+            
+            // Турбулентность
+            if (config.wind.turbulence > 0) {
+                flake.turbulence += 0.05;
+                flake.acceleration.x += Math.sin(flake.turbulence) * config.wind.turbulence * timeFactor;
+            }
+            
+            // Колебания
+            flake.wobble += flake.wobbleSpeed * timeFactor;
+            flake.acceleration.x += Math.sin(flake.wobble) * config.rotation.wobble * timeFactor;
+            
+            // Обновляем скорость с учетом сопротивления воздуха
+            flake.velocity.x = (flake.velocity.x + flake.acceleration.x) * config.airResistance;
+            flake.velocity.y = (flake.velocity.y + flake.acceleration.y) * config.airResistance;
+            
+            // Ограничиваем максимальную скорость
+            flake.velocity.y = Math.min(flake.velocity.y, flake.terminalVelocity);
+            
+            // Обновляем позицию
+            flake.x += flake.velocity.x * timeFactor;
+            flake.y += flake.velocity.y * timeFactor;
+            
+            // Обновляем вращение
+            flake.rotation += flake.rotationSpeed * timeFactor;
+            
+            // Проверка границ
+            if (flake.y > window.innerHeight + 20) {
+                resetSnowflake(flake);
+            }
+            
+            if (flake.x > window.innerWidth + 50) {
+                flake.x = -50;
+            } else if (flake.x < -50) {
+                flake.x = window.innerWidth + 50;
+            }
+            
+            // Обновляем элемент
+            flake.element.style.transform = 
+                `translate(${flake.x}px, ${flake.y}px) rotate(${flake.rotation}deg)`;
+            
+            // Легкое изменение прозрачности в зависимости от скорости
+            const speedFactor = Math.abs(flake.velocity.y) / flake.terminalVelocity;
+            flake.element.style.opacity = Math.min(flake.opacity, speedFactor * 1.5);
+        });
+    }
+    
+    function resetSnowflake(flake) {
+        // Сохраняем часть горизонтальной скорости для реалистичности
+        const horizontalMomentum = flake.velocity.x * 0.3;
+        
+        flake.y = random(-200, -50);
+        flake.x = random(-50, window.innerWidth + 50);
+        
+        // Сброс физики
+        flake.velocity = {
+            x: horizontalMomentum + random(-0.3, 0.3),
+            y: random(0.1, 0.4)
+        };
+        
+        flake.acceleration = {
+            x: 0,
+            y: config.gravity
+        };
+        
+        flake.rotation = random(0, 360);
+        flake.rotationSpeed = config.rotation.enabled ? 
+            random(config.rotation.speed.min, config.rotation.speed.max) : 0;
+        
+        flake.terminalVelocity = random(0.8, 1.5);
+        
+        // Плавное появление
+        flake.element.classList.remove('visible');
+        setTimeout(() => {
+            flake.element.classList.add('visible');
+        }, 100);
+    }
+    
+    // Основной цикл анимации
+    function animate(currentTime) {
+        if (!isAnimating) return;
+        
+        // Ограничение FPS
+        if (!lastTime) lastTime = currentTime;
+        const deltaTime = currentTime - lastTime;
+        
+        if (deltaTime > 1000 / config.fpsLimit) {
+            updatePhysics(deltaTime);
+            lastTime = currentTime;
+        }
+        
+        animationId = requestAnimationFrame(animate);
+    }
+    
+    // Обработка изменения размера окна
+    function handleResize() {
+        // Плавное обновление позиций снежинок
+        snowflakes.forEach(flake => {
+            if (flake.x > window.innerWidth) {
+                flake.x = window.innerWidth - 10;
+            }
+            if (flake.x < -10) {
+                flake.x = window.innerWidth + 10;
+            }
+        });
+        
+        // Обновляем эффект накопления снега
+        const accumulation = document.querySelector('.snow-accumulation');
+        if (accumulation) {
+            // Динамическая высота в зависимости от количества снежинок внизу
+            const flakesAtBottom = snowflakes.filter(f => 
+                f.y > window.innerHeight - 50
+            ).length;
+            
+            const accumulationHeight = Math.min(30, flakesAtBottom * 0.3);
+            accumulation.style.height = `${accumulationHeight}px`;
+        }
+    }
+    
+    // Автоматическая пауза при неактивной вкладке
+    function handleVisibilityChange() {
+        if (document.hidden) {
+            isAnimating = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        } else {
+            isAnimating = true;
+            lastTime = performance.now();
+            animationId = requestAnimationFrame(animate);
+        }
+    }
+    
+    // Инициализация
+    function init() {
+        // Добавляем легкий зимний фон
+        const winterOverlay = document.createElement('div');
+        winterOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: ${config.zIndex - 2};
+            background: linear-gradient(
+                to bottom,
+                rgba(135, 206, 235, 0.02) 0%,
+                rgba(176, 224, 230, 0.01) 100%
+            );
+            mix-blend-mode: overlay;
+        `;
+        document.body.appendChild(winterOverlay);
+        
+        // Создаем снежинки
+        createSnowflakes();
+        
+        // Запускаем анимацию
+        lastTime = performance.now();
+        animationId = requestAnimationFrame(animate);
+        
+        // Настройка событий
+        window.addEventListener('resize', handleResize);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        
+        // Автоматическая адаптация производительности
+        let frameCount = 0;
+        let lastFpsCheck = performance.now();
+        
+        function monitorPerformance() {
+            frameCount++;
+            const now = performance.now();
+            
+            if (now - lastFpsCheck > 1000) {
+                const fps = Math.round((frameCount * 1000) / (now - lastFpsCheck));
+                
+                // Автоматическое снижение количества снежинок при низком FPS
+                if (fps < 30 && snowflakes.length > 30) {
+                    // Плавно удаляем часть снежинок
+                    const toRemove = Math.floor(snowflakes.length * 0.1);
+                    for (let i = 0; i < toRemove; i++) {
+                        const flake = snowflakes.pop();
+                        if (flake && flake.element.parentNode) {
+                            flake.element.style.opacity = '0';
+                            setTimeout(() => {
+                                if (flake.element.parentNode) {
+                                    flake.element.parentNode.removeChild(flake.element);
+                                }
+                            }, 1000);
+                        }
+                    }
+                }
+                
+                frameCount = 0;
+                lastFpsCheck = now;
+            }
+            
+            requestAnimationFrame(monitorPerformance);
+        }
+        
+        monitorPerformance();
+    }
+    
+    // Запуск
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
 
+<!-- Минимальный CSS для улучшения вида -->
+<style>
+    /* Легкие эффекты для улучшения восприятия снега */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        background: 
+            radial-gradient(
+                circle at 20% 80%,
+                rgba(255, 255, 255, 0.03) 0%,
+                transparent 50%
+            ),
+            radial-gradient(
+                circle at 80% 20%,
+                rgba(255, 255, 255, 0.02) 0%,
+                transparent 50%
+            );
+        z-index: 9997;
+        animation: gentle-drift 60s infinite linear;
+    }
+    
+    @keyframes gentle-drift {
+        0% { transform: translate(0, 0); }
+        25% { transform: translate(-1%, 1%); }
+        50% { transform: translate(-1%, -1%); }
+        75% { transform: translate(1%, -1%); }
+        100% { transform: translate(0, 0); }
+    }
+    
+    /* Эффект холодного стекла для контента */
+    .content, article, main, .container {
+        position: relative;
+    }
+    
+    .content::after, article::after, main::after, .container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.01) 0%,
+            rgba(240, 248, 255, 0.005) 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+        mix-blend-mode: overlay;
+    }
+    
+    /* Улучшение контраста для текста на фоне снега */
+    h1, h2, h3, h4, h5, h6, p, li {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+</style>
     
 </body>
 </html>
