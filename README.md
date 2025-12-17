@@ -63,7 +63,7 @@
         /* ФОН С ВАШИМ ИЗОБРАЖЕНИЕМ */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('3db32463-2150-4c18-b1d1-7b64cf57a1d0.png') no-repeat center center fixed;
+            background: url('https://i.ibb.co/k20hVxM9/3db32463-2150-4c18-b1d1-7b64cf57a1d0.png') no-repeat center center fixed;
             background-size: cover;
             color: var(--white);
             min-height: 100vh;
