@@ -2362,6 +2362,748 @@
     
 })();
 </script>
+
+<script>
+// Новогодние украшения для сайта
+(function() {
+    'use strict';
+    
+    // Конфигурация
+    const config = {
+        enabled: true,
+        snowflakes: true,
+        decorations: true,
+        lights: true,
+        greeting: true,
+        music: false,
+        autoStart: true,
+        snowCount: 150,
+        decorationsCount: 20,
+        zIndex: 999999
+    };
+    
+    // Проверка даты (активировать только в декабре-январе)
+    const today = new Date();
+    const month = today.getMonth() + 1; // 1-12
+    if (!(month === 12 || month === 1)) {
+        console.log('Новогодние украшения активны только в декабре и январе');
+        return;
+    }
+    
+    let snowflakes = [];
+    let decorations = [];
+    let animationId = null;
+    let audio = null;
+    
+    // Создание стилей
+    const style = document.createElement('style');
+    style.textContent = `
+        .ny-decoration {
+            position: fixed;
+            pointer-events: none;
+            z-index: ${config.zIndex};
+            transition: transform 0.3s ease;
+        }
+        
+        /* Снежинки */
+        .ny-snowflake {
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            opacity: 0.9;
+        }
+        
+        /* Гирлянды */
+        .ny-garland {
+            width: 100%;
+            height: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: ${config.zIndex};
+            pointer-events: none;
+        }
+        
+        .ny-light {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: twinkle 1.5s infinite alternate;
+        }
+        
+        /* Украшения */
+        .ny-ball {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), transparent 70%);
+        }
+        
+        .ny-star {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid gold;
+            position: relative;
+        }
+        
+        .ny-star:after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: -15px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 25px solid gold;
+        }
+        
+        .ny-gift {
+            width: 30px;
+            height: 20px;
+            background: linear-gradient(45deg, #ff0000, #ff6b6b);
+            position: relative;
+            border-radius: 4px;
+        }
+        
+        .ny-gift:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 20px;
+            background: gold;
+        }
+        
+        .ny-gift:after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: gold;
+        }
+        
+        /* Поздравление */
+        .ny-greeting {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(0, 100, 0, 0.9), rgba(139, 0, 0, 0.9));
+            color: white;
+            padding: 30px 50px;
+            border-radius: 20px;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: ${config.zIndex + 100};
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 3px solid gold;
+            display: none;
+            animation: greetingPulse 2s infinite;
+            backdrop-filter: blur(10px);
+        }
+        
+        .ny-greeting h1 {
+            margin: 0 0 15px 0;
+            color: gold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .ny-greeting p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        
+        .ny-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        /* Панель управления */
+        .ny-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 50, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            z-index: ${config.zIndex + 200};
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            min-width: 200px;
+            border: 2px solid gold;
+            backdrop-filter: blur(5px);
+        }
+        
+        .ny-controls h3 {
+            margin: 0 0 10px 0;
+            color: gold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ny-btn {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .ny-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,0,0,0.3);
+        }
+        
+        .ny-toggle {
+            background: linear-gradient(135deg, #006400, #228b22);
+        }
+        
+        .ny-slider {
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .ny-slider-label {
+            display: block;
+            margin: 10px 0 5px 0;
+            color: gold;
+        }
+        
+        /* Анимации */
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes swing {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        @keyframes greetingPulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+            50% { box-shadow: 0 10px 40px rgba(255,215,0,0.5); }
+        }
+        
+        /* Мигающие огоньки на гирлянде */
+        .ny-light:nth-child(4n) { background: #ff0000; animation-delay: 0s; }
+        .ny-light:nth-child(4n+1) { background: #00ff00; animation-delay: 0.3s; }
+        .ny-light:nth-child(4n+2) { background: #0000ff; animation-delay: 0.6s; }
+        .ny-light:nth-child(4n+3) { background: #ffff00; animation-delay: 0.9s; }
+        
+        /* Вспышка при загрузке */
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .flash-effect {
+            animation: flash 0.5s 3;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Создание снежинок
+    function createSnowflakes() {
+        for (let i = 0; i < config.snowCount; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'ny-decoration ny-snowflake';
+            
+            const size = random(2, 8);
+            snowflake.style.width = `${size}px`;
+            snowflake.style.height = `${size}px`;
+            snowflake.style.left = `${random(0, window.innerWidth)}px`;
+            snowflake.style.top = `${random(-100, -10)}px`;
+            snowflake.style.opacity = random(0.5, 0.9);
+            
+            document.body.appendChild(snowflake);
+            
+            snowflakes.push({
+                element: snowflake,
+                x: parseFloat(snowflake.style.left),
+                y: parseFloat(snowflake.style.top),
+                speed: random(0.5, 2),
+                wind: random(-0.5, 0.5),
+                swing: random(0, Math.PI * 2),
+                size: size
+            });
+        }
+    }
+    
+    // Создание новогодних украшений
+    function createDecorations() {
+        const types = ['ball', 'star', 'gift'];
+        const colors = ['#ff0000', '#006400', '#0000ff', '#ffa500', '#800080', '#ffd700'];
+        
+        for (let i = 0; i < config.decorationsCount; i++) {
+            const type = types[Math.floor(random(0, types.length))];
+            const decoration = document.createElement('div');
+            decoration.className = `ny-decoration ny-${type}`;
+            
+            // Случайная позиция
+            const x = random(0, window.innerWidth - 50);
+            const y = random(50, window.innerHeight - 50);
+            
+            decoration.style.left = `${x}px`;
+            decoration.style.top = `${y}px`;
+            
+            if (type === 'ball') {
+                decoration.style.background = `radial-gradient(circle at 30% 30%, ${colors[Math.floor(random(0, colors.length))]}, #000000 120%)`;
+                decoration.style.animation = 'swing 3s infinite ease-in-out';
+                decoration.style.animationDelay = `${random(0, 2)}s`;
+            } else if (type === 'star') {
+                decoration.style.animation = 'float 4s infinite ease-in-out';
+                decoration.style.filter = 'drop-shadow(0 0 8px gold)';
+            } else if (type === 'gift') {
+                decoration.style.animation = 'float 5s infinite ease-in-out';
+                decoration.style.animationDelay = `${random(0, 3)}s`;
+            }
+            
+            // Добавляем взаимодействие
+            if (Math.random() > 0.7) {
+                decoration.style.pointerEvents = 'auto';
+                decoration.style.cursor = 'pointer';
+                decoration.title = 'Новогоднее украшение! 🎄';
+                
+                decoration.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.5)';
+                    this.style.filter = 'brightness(1.5) drop-shadow(0 0 15px gold)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        this.style.filter = '';
+                    }, 500);
+                    createSparkle(this);
+                });
+            }
+            
+            document.body.appendChild(decoration);
+            decorations.push(decoration);
+        }
+    }
+    
+    // Создание гирлянды
+    function createGarland() {
+        const garland = document.createElement('div');
+        garland.className = 'ny-garland';
+        
+        // Создаем огоньки
+        const lightCount = Math.floor(window.innerWidth / 30);
+        for (let i = 0; i < lightCount; i++) {
+            const light = document.createElement('div');
+            light.className = 'ny-light';
+            light.style.left = `${(i / lightCount) * 100}%`;
+            garland.appendChild(light);
+        }
+        
+        document.body.appendChild(garland);
+        
+        // Создаем вторую гирлянду внизу
+        const garlandBottom = garland.cloneNode(true);
+        garlandBottom.style.top = 'auto';
+        garlandBottom.style.bottom = '0';
+        document.body.appendChild(garlandBottom);
+    }
+    
+    // Создание поздравления
+    function createGreeting() {
+        const greeting = document.createElement('div');
+        greeting.className = 'ny-greeting';
+        greeting.id = 'nyGreeting';
+        
+        const messages = [
+            "С Новым 2025 Годом! 🎄",
+            "Пусть все мечты сбудутся! ⭐",
+            "Здоровья, счастья и удачи! ✨",
+            "Процветания и успехов во всем! 🎁"
+        ];
+        
+        greeting.innerHTML = `
+            <button class="ny-close-btn">&times;</button>
+            <h1>🎄 С Новым Годом! 🎅</h1>
+            ${messages.map(msg => `<p>${msg}</p>`).join('')}
+            <p style="color: gold; margin-top: 20px;">С наилучшими пожеланиями!</p>
+        `;
+        
+        document.body.appendChild(greeting);
+        
+        // Показываем приветствие через 2 секунды
+        setTimeout(() => {
+            greeting.style.display = 'block';
+            setTimeout(() => {
+                greeting.style.display = 'none';
+            }, 10000);
+        }, 2000);
+        
+        // Кнопка закрытия
+        greeting.querySelector('.ny-close-btn').addEventListener('click', () => {
+            greeting.style.display = 'none';
+        });
+    }
+    
+    // Создание панели управления
+    function createControlPanel() {
+        const controls = document.createElement('div');
+        controls.className = 'ny-controls';
+        
+        controls.innerHTML = `
+            <h3>🎄 Новогодние украшения</h3>
+            <div>
+                <button class="ny-btn ny-toggle" id="nyToggle">${config.enabled ? 'Выключить' : 'Включить'}</button>
+                <button class="ny-btn" id="nyShowGreeting">Поздравление 🎅</button>
+                <button class="ny-btn" id="nyMoreSnow">❄️ Больше снега</button>
+                <button class="ny-btn" id="nyMoreDecor">🎁 Украшения</button>
+            </div>
+            
+            <label class="ny-slider-label">Снежинки: <span id="nySnowValue">${config.snowCount}</span></label>
+            <input type="range" min="0" max="500" value="${config.snowCount}" class="ny-slider" id="nySnowSlider">
+            
+            <label class="ny-slider-label">Скорость: <span id="nySpeedValue">2</span></label>
+            <input type="range" min="1" max="5" step="0.5" value="2" class="ny-slider" id="nySpeedSlider">
+            
+            <div style="margin-top: 10px; font-size: 12px; color: #90ee90;">
+                🎄 С Новым Годом! 🎅
+            </div>
+        `;
+        
+        document.body.appendChild(controls);
+        
+        // Обработчики событий
+        document.getElementById('nyToggle').addEventListener('click', toggleDecorations);
+        document.getElementById('nyShowGreeting').addEventListener('click', showGreeting);
+        document.getElementById('nyMoreSnow').addEventListener('click', addMoreSnow);
+        document.getElementById('nyMoreDecor').addEventListener('click', addMoreDecorations);
+        
+        document.getElementById('nySnowSlider').addEventListener('input', function(e) {
+            config.snowCount = parseInt(e.target.value);
+            document.getElementById('nySnowValue').textContent = config.snowCount;
+            updateSnowflakes();
+        });
+        
+        document.getElementById('nySpeedSlider').addEventListener('input', function(e) {
+            const speed = parseFloat(e.target.value);
+            document.getElementById('nySpeedValue').textContent = speed;
+            updateSnowSpeed(speed);
+        });
+    }
+    
+    // Анимация снежинок
+    function animateSnowflakes() {
+        snowflakes.forEach(snowflake => {
+            snowflake.y += snowflake.speed;
+            snowflake.x += snowflake.wind;
+            
+            snowflake.swing += 0.02;
+            snowflake.x += Math.sin(snowflake.swing) * 0.3;
+            
+            if (snowflake.y > window.innerHeight) {
+                snowflake.y = -10;
+                snowflake.x = random(0, window.innerWidth);
+            }
+            
+            if (snowflake.x > window.innerWidth + 20) {
+                snowflake.x = -20;
+            } else if (snowflake.x < -20) {
+                snowflake.x = window.innerWidth + 20;
+            }
+            
+            snowflake.element.style.transform = `translate(${snowflake.x}px, ${snowflake.y}px)`;
+        });
+        
+        animationId = requestAnimationFrame(animateSnowflakes);
+    }
+    
+    // Вспомогательные функции
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+    
+    function updateSnowflakes() {
+        // Удаляем лишние снежинки
+        if (snowflakes.length > config.snowCount) {
+            const toRemove = snowflakes.slice(config.snowCount);
+            toRemove.forEach(s => s.element.remove());
+            snowflakes = snowflakes.slice(0, config.snowCount);
+        }
+        // Добавляем новые
+        else if (snowflakes.length < config.snowCount) {
+            for (let i = snowflakes.length; i < config.snowCount; i++) {
+                createSingleSnowflake();
+            }
+        }
+    }
+    
+    function createSingleSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'ny-decoration ny-snowflake';
+        
+        const size = random(2, 8);
+        snowflake.style.width = `${size}px`;
+        snowflake.style.height = `${size}px`;
+        snowflake.style.left = `${random(0, window.innerWidth)}px`;
+        snowflake.style.top = `${random(-100, -10)}px`;
+        snowflake.style.opacity = random(0.5, 0.9);
+        
+        document.body.appendChild(snowflake);
+        
+        snowflakes.push({
+            element: snowflake,
+            x: parseFloat(snowflake.style.left),
+            y: parseFloat(snowflake.style.top),
+            speed: random(0.5, 2),
+            wind: random(-0.5, 0.5),
+            swing: random(0, Math.PI * 2),
+            size: size
+        });
+    }
+    
+    function updateSnowSpeed(speedFactor) {
+        snowflakes.forEach(snowflake => {
+            snowflake.speed = random(0.5 * speedFactor, 2 * speedFactor);
+        });
+    }
+    
+    function addMoreSnow() {
+        config.snowCount += 50;
+        updateSnowflakes();
+        document.getElementById('nySnowValue').textContent = config.snowCount;
+        document.getElementById('nySnowSlider').value = config.snowCount;
+    }
+    
+    function addMoreDecorations() {
+        config.decorationsCount += 10;
+        for (let i = 0; i < 10; i++) {
+            createSingleDecoration();
+        }
+    }
+    
+    function createSingleDecoration() {
+        const types = ['ball', 'star', 'gift'];
+        const colors = ['#ff0000', '#006400', '#0000ff', '#ffa500', '#800080', '#ffd700'];
+        
+        const type = types[Math.floor(random(0, types.length))];
+        const decoration = document.createElement('div');
+        decoration.className = `ny-decoration ny-${type}`;
+        
+        const x = random(0, window.innerWidth - 50);
+        const y = random(50, window.innerHeight - 50);
+        
+        decoration.style.left = `${x}px`;
+        decoration.style.top = `${y}px`;
+        
+        if (type === 'ball') {
+            decoration.style.background = `radial-gradient(circle at 30% 30%, ${colors[Math.floor(random(0, colors.length))]}, #000000 120%)`;
+            decoration.style.animation = 'swing 3s infinite ease-in-out';
+        }
+        
+        decoration.style.pointerEvents = 'auto';
+        decoration.style.cursor = 'pointer';
+        decoration.title = 'Новогоднее украшение! 🎄';
+        
+        decoration.addEventListener('click', function() {
+            this.style.transform = 'scale(1.5)';
+            this.style.filter = 'brightness(1.5) drop-shadow(0 0 15px gold)';
+            setTimeout(() => {
+                this.style.transform = '';
+                this.style.filter = '';
+            }, 500);
+            createSparkle(this);
+        });
+        
+        document.body.appendChild(decoration);
+        decorations.push(decoration);
+    }
+    
+    function createSparkle(element) {
+        for (let i = 0; i < 10; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'ny-decoration ny-snowflake';
+            sparkle.style.width = '4px';
+            sparkle.style.height = '4px';
+            sparkle.style.background = 'gold';
+            sparkle.style.left = `${parseFloat(element.style.left) + 15}px`;
+            sparkle.style.top = `${parseFloat(element.style.top) + 15}px`;
+            sparkle.style.boxShadow = '0 0 10px gold';
+            
+            document.body.appendChild(sparkle);
+            
+            const angle = random(0, Math.PI * 2);
+            const speed = random(2, 5);
+            let x = 0, y = 0;
+            
+            function animateSparkle() {
+                x += Math.cos(angle) * speed;
+                y += Math.sin(angle) * speed;
+                
+                sparkle.style.transform = `translate(${x}px, ${y}px)`;
+                sparkle.style.opacity = 1 - (Math.sqrt(x*x + y*y) / 50);
+                
+                if (Math.sqrt(x*x + y*y) < 50) {
+                    requestAnimationFrame(animateSparkle);
+                } else {
+                    sparkle.remove();
+                }
+            }
+            
+            animateSparkle();
+        }
+    }
+    
+    function showGreeting() {
+        const greeting = document.getElementById('nyGreeting');
+        if (greeting) {
+            greeting.style.display = 'block';
+            setTimeout(() => {
+                greeting.style.display = 'none';
+            }, 8000);
+        }
+    }
+    
+    function toggleDecorations() {
+        config.enabled = !config.enabled;
+        const toggleBtn = document.getElementById('nyToggle');
+        
+        if (config.enabled) {
+            toggleBtn.textContent = 'Выключить';
+            document.body.classList.remove('ny-disabled');
+            if (!animationId) animateSnowflakes();
+        } else {
+            toggleBtn.textContent = 'Включить';
+            document.body.classList.add('ny-disabled');
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+    }
+    
+    // Инициализация
+    function init() {
+        if (!config.enabled) return;
+        
+        // Добавляем праздничный класс к body
+        document.body.classList.add('new-year-theme');
+        
+        // Создаем эффект вспышки
+        document.body.classList.add('flash-effect');
+        setTimeout(() => document.body.classList.remove('flash-effect'), 1500);
+        
+        // Создаем элементы
+        if (config.snowflakes) {
+            createSnowflakes();
+            animateSnowflakes();
+        }
+        
+        if (config.decorations) {
+            createDecorations();
+        }
+        
+        if (config.lights) {
+            createGarland();
+        }
+        
+        if (config.greeting) {
+            createGreeting();
+        }
+        
+        createControlPanel();
+        
+        // Обработка изменения размера окна
+        window.addEventListener('resize', () => {
+            snowflakes.forEach(s => {
+                if (s.x > window.innerWidth) s.x = window.innerWidth - 20;
+            });
+        });
+    }
+    
+    // Запуск
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+    
+})();
+</script>
+
+<!-- Добавьте этот CSS для дополнительных эффектов -->
+<style>
+    .new-year-theme {
+        /* Легкий новогодний градиент на фон */
+        background: linear-gradient(180deg, 
+            rgba(0, 20, 0, 0.03) 0%, 
+            rgba(139, 0, 0, 0.03) 100%);
+    }
+    
+    /* Снежинки на заднем плане некоторых элементов */
+    .new-year-theme h1, .new-year-theme h2, .new-year-theme h3 {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Мигающие ссылки */
+    .new-year-theme a {
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .new-year-theme a:hover {
+        color: #ff0000 !important;
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+    
+    /* Праздничные кнопки */
+    .new-year-theme button:not(.ny-btn):not(.ny-close-btn):not(.ny-toggle) {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .new-year-theme button:not(.ny-btn):not(.ny-close-btn):not(.ny-toggle):after {
+        content: '🎄';
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.8em;
+        opacity: 0.7;
+    }
+    
+    /* Новогодний курсор (опционально) */
+    .new-year-theme {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><circle cx="16" cy="16" r="8" fill="%23FF0000" opacity="0.7"/><circle cx="16" cy="16" r="4" fill="%23FFFFFF"/></svg>') 16 16, auto;
+    }
+</style>
     
 </body>
 </html>
