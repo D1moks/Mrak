@@ -1838,7 +1838,7 @@
         </div>
 
         <div class="footer">
-            <p>© 2025 Отряд Мрак | s5.yufu.su:27017</p>
+            <p>© 2026 Отряд Мрак | s5.yufu.su:27017</p>
             <p style="margin-top: 10px; font-size: 0.9em;">Мрак • Сила • Тайна • 🎄 Новый год 🎄</p>
         </div>
     </div>
