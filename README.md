@@ -1741,7 +1741,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Otokuma ➤ Demon</div>
-                                    <div class="rank-requirements">КД: 2 день</div>
+                                    <div class="rank-requirements">КД: 1 день</div>
                                 </div>
                                 <div class="rank-matter">5 Кровавых Монет</div>
                             </div>
@@ -1749,7 +1749,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Demon ➤ Keykon</div>
-                                    <div class="rank-requirements">КД: 2 день</div>
+                                    <div class="rank-requirements">КД: 1 день</div>
                                 </div>
                                 <div class="rank-matter">10 Кровавых Монет</div>
                             </div>
@@ -1757,7 +1757,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Keykon ➤ Hofuma</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 2 дня</div>
                                 </div>
                                 <div class="rank-matter">15 Кровавых Монет</div>
                             </div>
@@ -1765,7 +1765,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Hofuma ➤ Chisuma</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 2 дня</div>
                                 </div>
                                 <div class="rank-matter">20 Кровавых Монет</div>
                             </div>
@@ -1773,7 +1773,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Chisuma ➤ Chikuma</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 2 дня</div>
                                 </div>
                                 <div class="rank-matter">25 Кровавых Монет</div>
                             </div>
@@ -1781,7 +1781,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Chikuma ➤ Asakuma</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
+                                    <div class="rank-requirements">КД: 2 дня</div>
                                 </div>
                                 <div class="rank-matter">30 Кровавых Монет</div>
                             </div>
@@ -1789,7 +1789,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Asakuma ➤ Hobura</div>
-                                    <div class="rank-requirements">КД: 4 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
                                 <div class="rank-matter">35 Кровавых Монет</div>
                             </div>
@@ -1797,7 +1797,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Hobura ➤ Shateigashira</div>
-                                    <div class="rank-requirements">КД: 4 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
                                 <div class="rank-matter">40 Кровавых Монет</div>
                             </div>
@@ -1805,7 +1805,7 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Shateigashira ➤ Wakagashira</div>
-                                    <div class="rank-requirements">КД: 4 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
                                 <div class="rank-matter">45 Кровавых Монет</div>
                             </div>
@@ -1813,14 +1813,14 @@
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Wakagashira ➤ Tsukumon</div>
-                                    <div class="rank-requirements">КД: 4 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
                                 <div class="rank-matter">50 Кровавых Монет</div>
                             </div>
                             <div class="rank-card">
                                 <div class="rank-info">
                                     <div class="rank-name">Tsukumon ➤ Shiko</div>
-                                    <div class="rank-requirements">КД: 4 дня</div>
+                                    <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
                                 <div class="rank-matter">55 Кровавых Монет + Одобрение Мудзана</div>
                             </div>  
