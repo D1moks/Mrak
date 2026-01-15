@@ -1816,14 +1816,7 @@
                                     <div class="rank-requirements">КД: 3 дня</div>
                                 </div>
                                 <div class="rank-matter">50 Кровавых Монет</div>
-                            </div>
-                            <div class="rank-card">
-                                <div class="rank-info">
-                                    <div class="rank-name">Tsukumon ➤ Shiko</div>
-                                    <div class="rank-requirements">КД: 3 дня</div>
-                                </div>
-                                <div class="rank-matter">55 Кровавых Монет + Одобрение Мудзана</div>
-                            </div>  
+                            </div> 
                             
                         </div>
                         
