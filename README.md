@@ -1609,7 +1609,7 @@
                             <div class="member-card halloween-card">
                                 <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Инструктор Мрака</div>
-                                <div class="member-name">Атома Гусато</div>
+                                <div class="member-name">Сугимото Мукай</div>
                                 <div class="member-role">Инструктор<br></div>
                             </div>
                             
