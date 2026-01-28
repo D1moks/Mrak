@@ -1620,10 +1620,10 @@
                                 <div class="member-role">Инструктор<br></div>
                             </div>
                             
-                             <div class="member-card halloween-card vacant">
-                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
+                            <div class="member-card halloween-card">
+                                <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Инструктор Мрака</div>
-                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-name">Кенджи Казушико</div>
                                 <div class="member-role">Инструктор<br></div>
                             </div>
                         </div>
@@ -1633,13 +1633,6 @@
                     <div class="team-category">
                         <h2 class="category-title">Жнецы Мрака</h2>
                         <div class="members-grid">
-                            <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-star"></i></div>
-                                <div class="member-rank">Жнец Мрака</div>
-                                <div class="member-name">Ohirat Rahal</div>
-                                <div class="member-role">Боец<br></div>
-                            </div>
-                            
                            <div class="member-card halloween-card">
                                 <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Жнец Мрака</div>
@@ -1666,6 +1659,13 @@
                                 <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Жнец Мрака</div>
                                 <div class="member-name">Renard Shirai</div>
+                                <div class="member-role">Боец<br></div>
+                            </div>
+                            
+                            <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
+                                <div class="member-rank">Жнец Мрака</div>
+                                <div class="member-name">[Вакантно]</div>
                                 <div class="member-role">Боец<br></div>
                             </div>
                         </div>
