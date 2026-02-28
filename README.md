@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отряд МРАК - Новый Год</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎄</text></svg>">
+    <title>Отряд МРАК</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌑</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -1045,7 +1045,7 @@
         }
         
         .halloween-nav-item::after {
-            content: '🎄';
+            content: '🌑';
             position: absolute;
             right: 10px;
             font-size: 0.8em;
@@ -1090,7 +1090,7 @@
         }
         
         .halloween-banner::before, .halloween-banner::after {
-            content: '🎄';
+            content: '🌑';
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
@@ -1413,8 +1413,8 @@
             <div id="main" class="section active">
                 <!-- новогодний БАННЕР -->
                 <div class="halloween-banner">
-                    <h2>🎄 Новогодний Вайб в отряде Мрак 🎄</h2>
-                    <p>Счастливого нового года, всего вам мрачного</p>
+                    <h2>🌑 Чиловый Вайб в Отряде Мрак 🌑</h2>
+                    <p>Chill Time</p>
                 </div>
                 
                 <section class="hero">
@@ -1833,7 +1833,7 @@
 
         <div class="footer">
             <p>© 2026 Отряд Мрак | s5.yufu.su:27017</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">Мрак • Сила • Тайна • 🎄 Новый год 🎄</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Мрак • Сила • Тайна • 🌑 Chill 🌑</p>
         </div>
     </div>
 
