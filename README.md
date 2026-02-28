@@ -1592,11 +1592,10 @@
                                 <div class="member-name">Shikori Agave</div>
                                 <div class="member-role">Командир отряда (CMD)<br></div>
                             </div>
-                            
-                            <div class="member-card halloween-card vacant">
-                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
+                            <div class="member-card halloween-card">
+                                <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Старший Жнец Мрака</div>
-                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-name">Reiu Amashima</div>
                                 <div class="member-role">Заместитель командира (D.CMD)<br></div>
                             </div>
                         </div>
