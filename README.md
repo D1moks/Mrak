@@ -1639,10 +1639,10 @@
                                 <div class="member-role">Боец<br></div>
                             </div>
                             
-                            <div class="member-card halloween-card vacant">
-                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
+                              <div class="member-card halloween-card">
+                                <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Жнец Мрака</div>
-                                <div class="member-name">[Вакантно]</div>
+                                <div class="member-name">Хиде Фукурами</div>
                                 <div class="member-role">Боец<br></div>
                             </div>
                             
