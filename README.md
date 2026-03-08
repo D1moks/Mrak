@@ -1695,7 +1695,7 @@
                                     <li>Убийство 1 истребителя ➤ <span class="matter-amount">1 Кровавая Монета</span></li>
                                     <li>Убийство 1 столпа ➤ <span class="matter-amount">2 Кровавые Монеты</span></li>
                                     <li>Продолжительный захват точки ➤ <span class="matter-amount">3 Кровавых Монет</span></li>
-                                    <li>Захват обычной точеки ➤ <span class="matter-amount">1 Кровавые Монеты</span></li>
+                                    <li>Захват обычной точки ➤ <span class="matter-amount">1 Кровавые Монеты</span></li>
                                     <li>Участие в ГРП ➤ <span class="matter-amount">5 Кровавых Монет</span></li>
                                 </ul>
                             </div>
