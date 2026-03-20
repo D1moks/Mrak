@@ -1576,7 +1576,7 @@
                             <div class="member-card halloween-card">
                                 <div class="member-avatar"><i class="fas fa-crown"></i></div>
                                 <div class="member-rank">Мрачная Жница Мрака</div>
-                                <div class="member-name">Амайя Кумагаи</div>
+                                <div class="member-name">Hattori Hiroto</div>
                                 <div class="member-role">Владелец отряда<br>Верховная правительница</div>
                             </div>
                         </div>
@@ -1592,10 +1592,10 @@
                                 <div class="member-name">Shikori Agave</div>
                                 <div class="member-role">Командир отряда (CMD)<br></div>
                             </div>
-                            <div class="member-card halloween-card vacant">
-                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
+                            <div class="member-card halloween-card">
+                                <div class="member-avatar"><i class="fas fa-star"></i></div>
                                 <div class="member-rank">Старший Жнец Мрака</div>
-                               <div class="member-name">[Вакантно]</div>
+                               <div class="member-name">Medzifara Doto</div>
                                 <div class="member-role">Заместитель командира (D.CMD)<br></div>
                             </div>
                         </div>
@@ -1605,17 +1605,17 @@
                     <div class="team-category">
                         <h2 class="category-title">Инструкторы Мрака</h2>
                         <div class="members-grid">
-                              <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-star"></i></div>
+                            <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Инструктор Мрака</div>
-                                <div class="member-name">Асано Сато</div>
+                                <div class="member-name">[Вакантно]</div>
                                 <div class="member-role">Инструктор<br></div>
                             </div>
                             
-                              <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-star"></i></div>
+                            <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Инструктор Мрака</div>
-                                <div class="member-name">Аото Сукихиро</div>
+                                <div class="member-name">[Вакантно]</div>
                                 <div class="member-role">Инструктор<br></div>
                             </div>
                             
@@ -1632,10 +1632,10 @@
                     <div class="team-category">
                         <h2 class="category-title">Жнецы Мрака</h2>
                         <div class="members-grid">
-                              <div class="member-card halloween-card">
-                                <div class="member-avatar"><i class="fas fa-star"></i></div>
+                            <div class="member-card halloween-card vacant">
+                                <div class="member-avatar"><i class="fas fa-user-plus"></i></div>
                                 <div class="member-rank">Жнец Мрака</div>
-                                <div class="member-name">Shiron-no Shabana</div>
+                                <div class="member-name">[Вакантно]</div>
                                 <div class="member-role">Боец<br></div>
                             </div>
                             
