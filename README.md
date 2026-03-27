@@ -2142,12 +2142,12 @@
                 requestAnimationFrame(() => this.animate());
             }
         }
-<!-- 
-<script>
-        window.addEventListener('load', () => {
-            new WebGLBackground();
-        });
+
+   
+       window.addEventListener('load', () => {
+           new WebGLBackground();
+       });
+   
     </script>
--->
-</body>
+    </body>
 
