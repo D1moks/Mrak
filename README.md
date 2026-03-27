@@ -2142,12 +2142,12 @@
                 requestAnimationFrame(() => this.animate());
             }
         }
-    // Закомментировали создание объекта
-    /*
-       window.addEventListener('load', () => {
-           new WebGLBackground();
-       });
-    */   
+<!-- 
+<script>
+        window.addEventListener('load', () => {
+            new WebGLBackground();
+        });
     </script>
-    </body>
+-->
+</body>
 
