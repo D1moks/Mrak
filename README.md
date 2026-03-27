@@ -24,7 +24,7 @@
             --halloween-purple: #8a2be2;
             --pumpkin: #ff8c00;
         }
-/*
+
                 * {
                     margin: 0;
                     padding: 0;
@@ -2143,9 +2143,9 @@
             }
         }
 
-        window.addEventListener('load', () => {
-            new WebGLBackground();
-        });
-    </script>
-    </body>
-*/
+//        window.addEventListener('load', () => {
+//            new WebGLBackground();
+//        });
+//    </script>
+//    </body>
+
